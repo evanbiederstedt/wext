@@ -11,6 +11,8 @@ Latest tested version in parentheses.
     a. NumPy (1.11.0)
 
     b. SciPy (0.17.0)
+    
+    c. NetworkX (1.11) ??
 
 2. gcc (4.9.2)
 
