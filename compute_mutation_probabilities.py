@@ -20,12 +20,13 @@ def get_parser():
     parser.add_argument('-q', '--swap_multiplier', type=int, required=False, default=100)
     parser.add_argument('-nc', '--num_cores', type=int, required=False, default=1)
     parser.add_argument('-s', '--seed', type=int, required=False, default=None)
-    parser.add_argument('-v', '--verbose', type=int, required=False, default=1, choices=range(5))
+    parser.add_argument('-v', '--verbose', type=int, required=False, default=1, choices=list(range(5)))
     return parser
 
-def permute_matrices_wrapper(args): return permute_matrices(*args)
-def permute_matrices(edge_list, max_swaps, max_tries, seeds, verbose,
-                     m, n, num_edges, indexToGene, indexToPatient):
+def permute_matrices_wrapper(args): 
+    return permute_matrices(*args)
+
+def permute_matrices(edge_list, max_swaps, max_tries, seeds, verbose, m, n, num_edges, indexToGene, indexToPatient):
     # Initialize our output
     observed     = np.zeros((m, n))
     permutations = []
@@ -43,8 +44,8 @@ def permute_matrices(edge_list, max_swaps, max_tries, seeds, verbose,
             indices.append( (edge[0]-1, edge[1]-1) )
 
         # Record the permutation
-        observed[zip(*indices)] += 1.
-        geneToCases = dict( (g, list(cases)) for g, cases in geneToCases.iteritems() )
+        observed[list(zip(*indices))] += 1.
+        geneToCases = dict( (g, list(cases)) for g, cases in iter(list(geneToCases.items())) )
         permutations.append( dict(geneToCases=geneToCases, permutation_number=seed) )
 
     return observed/float(len(seeds)), permutations
@@ -60,7 +61,7 @@ def postprocess_weight_matrix(P, r, s):
 
     # Average weights over entries of weight matrix with same marginals
     P_mean = np.zeros(np.shape(P))
-    for marginals, indices in marginals_to_indices.items():
+    for marginals, indices in list(marginals_to_indices.items()):
         mean_value = float(sum(P[i, j] for i, j in indices))/float(len(indices))
         for i, j in indices:
             P_mean[i, j] = mean_value
@@ -76,20 +77,20 @@ def run( args ):
 
     # Load mutation data
     if args.verbose > 0:
-        print '* Loading mutation data...'
+        print('* Loading mutation data...')
 
     mutation_data = load_mutation_data( args.mutation_file )
     genes, all_genes, patients, geneToCases, patientToMutations, params, hypermutators = mutation_data
 
-    geneToObserved = dict( (g, len(cases)) for g, cases in geneToCases.iteritems() )
-    patientToObserved = dict( (p, len(muts)) for p, muts in patientToMutations.iteritems() )
+    geneToObserved = dict( (g, len(cases)) for g, cases in iter(list(geneToCases.items())) )
+    patientToObserved = dict( (p, len(muts)) for p, muts in iter(list(patientToMutations.items())) )
     geneToIndex = dict( (g, i+1) for i, g in enumerate(all_genes) )
     indexToGene = dict( (i+1, g) for i, g in enumerate(all_genes) )
     patientToIndex = dict( (p, j+1) for j, p in enumerate(patients) )
     indexToPatient = dict( (j+1, p) for j, p in enumerate(patients) )
 
     edges = set()
-    for gene, cases in geneToCases.iteritems():
+    for gene, cases in list(geneToCases.items()):
         for patient in cases:
             edges.add( (geneToIndex[gene], patientToIndex[patient]) )
 
@@ -97,7 +98,7 @@ def run( args ):
 
     # Run the bipartite edge swaps
     if args.verbose > 0:
-        print '* Permuting matrices...'
+        print('* Permuting matrices...')
 
     m = len(all_genes)
     n = len(patients)
@@ -106,7 +107,7 @@ def run( args ):
     max_tries = 10**9
     if args.seed is not None:
         random.seed(args.seed)
-    seeds = random.sample(xrange(1, 2*10**9), args.num_permutations)
+    seeds = random.sample(list(range(1, 2*10**9)), args.num_permutations)
 
     # Run the bipartite edge swaps in parallel if more than one core indicated
     num_cores = min(args.num_cores if args.num_cores != -1 else mp.cpu_count(), args.num_permutations)
@@ -127,7 +128,7 @@ def run( args ):
     # Create the weights file
     if args.weights_file:
         if args.verbose > 0:
-            print '* Saving weights file...'
+            print('* Saving weights file...')
 
         # Allow for small accumulated numerical errors
         tol = 1e3*max(m, n)*args.num_permutations*np.finfo(np.float64).eps
@@ -137,10 +138,10 @@ def run( args ):
         P = np.add.reduce(observeds) / float(len(observeds))
 
         # Verify the weights
-        for g, obs in geneToObserved.iteritems():
+        for g, obs in list(geneToObserved.items()):
             assert( np.abs(P[geneToIndex[g]-1].sum() - obs) < tol)
 
-        for p, obs in patientToObserved.iteritems():
+        for p, obs in list(patientToObserved.items()):
             assert( np.abs(P[:, patientToIndex[p]-1].sum() - obs) < tol)
 
         # Construct mutation matrix to compute marginals
@@ -154,10 +155,10 @@ def run( args ):
         P = postprocess_weight_matrix(P, r, s)
 
         # Verify the weights again
-        for g, obs in geneToObserved.iteritems():
+        for g, obs in list(geneToObserved.items()):
             assert( np.abs(P[geneToIndex[g]-1].sum() - obs) < tol)
 
-        for p, obs in patientToObserved.iteritems():
+        for p, obs in list(patientToObserved.items()):
             assert( np.abs(P[:, patientToIndex[p]-1].sum() - obs) < tol)
 
         # Add pseudocounts to entries with no mutations observed; unlikely or impossible after post-processing step
@@ -171,7 +172,7 @@ def run( args ):
     if args.permutation_directory:
         output_prefix = args.permutation_directory + '/permuted-mutations-{}.json'
         if args.verbose > 0:
-            print '* Saving permuted mutation data...'
+            print('* Saving permuted mutation data...')
 
         for _, permutation_list in results:
             for permutation in permutation_list:
@@ -180,4 +181,5 @@ def run( args ):
                     permutation['params'] = params
                     json.dump( permutation, OUT )
 
-if __name__ == '__main__': run( get_parser().parse_args(sys.argv[1:]) )
+if __name__ == '__main__': 
+    run( get_parser().parse_args(sys.argv[1:]) )

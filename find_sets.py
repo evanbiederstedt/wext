@@ -87,7 +87,8 @@ def load_mutation_files(mutation_files):
         genes    |= set(type_genes)
 
         # Record the mutations in each gene
-        for g, cases in typeGeneToCases.iteritems(): geneToCases[g] |= cases
+        for g, cases in list(typeGeneToCases.items()): 
+            geneToCases[g] |= cases
 
         # Record the genes, patients, and their indices for later
         typeToGeneIndex.append(dict(zip(type_genes, range(len(type_genes)))))
@@ -101,12 +102,12 @@ def run( args ):
 
     # Load the mutation data
     if args.verbose > 0:
-        print ('-' * 30), 'Input Mutation Data', ('-' * 29)
+        print(('-' * 30), 'Input Mutation Data', ('-' * 29))
     genes, patients, geneToCases, typeToGeneIndex, typeToPatientIndex = load_mutation_files( args.mutation_files )
     num_all_genes, num_patients = len(genes), len(patients)
 
     # Restrict to genes mutated in a minimum number of samples
-    geneToCases = dict( (g, cases) for g, cases in geneToCases.iteritems() if g in genes and len(cases) >= args.min_frequency )
+    geneToCases = dict( (g, cases) for g, cases in list(geneToCases.items()) if g in genes and len(cases) >= args.min_frequency )
     genes     = set(geneToCases.keys())
     num_genes = len(genes)
 
@@ -119,7 +120,7 @@ def run( args ):
         # Since we are looking for co-occurrence between exclusive sets with
         # an annotation A, we add events for each patient NOT annotated by
         # the given annotation
-        for annotation, cases in annotationToPatients.iteritems():
+        for annotation, cases in list(annotationToPatients.items()):
             not_cases = patients - cases
             if len(not_cases) > 0:
                 geneToCases[annotation] = not_cases
@@ -127,26 +128,28 @@ def run( args ):
         annotations = set()
 
     if args.verbose > 0:
-        print '- Genes:', num_all_genes
-        print '- Patients:', num_patients
-        print '- Genes mutated in >={} patients: {}'.format(args.min_frequency, num_genes)
+        print('- Genes:', num_all_genes)
+        print('- Patients:', num_patients)
+        print('- Genes mutated in >={} patients: {}'.format(args.min_frequency, num_genes))
         if args.patient_annotation_file:
-            print '- Patient annotations:', len(annotations)
+            print('- Patient annotations:', len(annotations))
 
     # Load the weights (if necessary)
 
     # Create master versions of the indices
-    masterGeneToIndex    = dict(zip(sorted(genes), range(num_genes)))
-    masterPatientToIndex = dict( zip(sorted(patients), range(num_patients)) )
+    masterGeneToIndex    = dict(list(zip(sorted(genes), list(range(num_genes)))))
+    masterPatientToIndex = dict(list(zip(sorted(patients), list(range(num_patients)))))
     geneToP = load_weight_files(args.weights_files, genes, patients, typeToGeneIndex, typeToPatientIndex, masterGeneToIndex, masterPatientToIndex)
 
-    if args.verbose > 0: print ('-' * 31), 'Enumerating Sets', ('-' * 31)
+    if args.verbose > 0: 
+        print(('-' * 31), 'Enumerating Sets', ('-' * 31))
     k = args.gene_set_size
     # Create a list of sets to test
     sets = list( frozenset(t) for t in combinations(genes, k) )
     num_sets = len(sets)
 
-    if args.verbose  > 0: print 'k={}: {} sets...'.format(k, num_sets)
+    if args.verbose  > 0: 
+        print('k={}: {} sets...'.format(k, num_sets))
     # Run the test
     method = nameToMethod['Saddlepoint']
     test = nameToTest['WRE']
@@ -155,4 +158,5 @@ def run( args ):
                                                             verbose=args.verbose, report_invalids=args.report_invalids)
     output_enumeration_table( args, k, setToPval, setToRuntime, setToFDR, setToObs, args.fdr_threshold )
 
-if __name__ == '__main__': run( get_parser().parse_args(sys.argv[1:]) )
+if __name__ == '__main__': 
+    run( get_parser().parse_args(sys.argv[1:]) )

@@ -19,11 +19,12 @@ def get_parser():
     parser.add_argument('-ivs', '--ignored_validation_statuses', type=str, required=False, nargs='*',
                         default=['Wildtype', 'Invalid'])
     parser.add_argument('-o', '--output_file', type=str, required=True)
-    parser.add_argument('-v', '--verbose', type=int, default=1, required=False, choices=range(5))
+    parser.add_argument('-v', '--verbose', type=int, default=1, required=False, choices=list(range(5)))
     return parser
 
 def process_maf( maf_file, patientWhitelist, geneToCases, patientToMutations, vc, vt, vs, ivc, ivt, ivs, verbose ):
-    if verbose > 1: print '\tLoading MAF:', maf_file
+    if verbose > 1: 
+        print('\tLoading MAF:', maf_file)
     genes, patients = set(), set()
     with open(maf_file, 'r') as IN:
         seenHeader = False
@@ -31,7 +32,7 @@ def process_maf( maf_file, patientWhitelist, geneToCases, patientToMutations, vc
             arr = l.rstrip('\n').split('\t')
             # Parse the header if we haven't seen it yet
             if not seenHeader and arr[0].lower() == 'hugo_symbol':
-                arr              = map(str.lower, arr)
+                arr              = list(map(str.lower, arr))
                 seenHeader       = True
                 gene_index       = 0
                 patient_index    = arr.index('tumor_sample_barcode')
@@ -44,7 +45,8 @@ def process_maf( maf_file, patientWhitelist, geneToCases, patientToMutations, vc
                 # Record the patients and genes, even if we ignore their mutations
                 patient, gene = '-'.join(arr[patient_index].split('-')[:3]), arr[gene_index]
 
-                if not patientWhitelist[patient]: continue
+                if not patientWhitelist[patient]: 
+                    continue
 
                 patients.add(patient)
                 genes.add(gene)
@@ -83,7 +85,8 @@ def process_maf( maf_file, patientWhitelist, geneToCases, patientToMutations, vc
     return genes, patients
 
 def process_events_file( events_file, patientWhitelist, geneToCases, patientToMutations, verbose ):
-    if verbose > 1: print '\tProcessing events file:', events_file
+    if verbose > 1: 
+        print('\tProcessing events file:', events_file)
 
     # Parse the events file
     events, patients = set(), set()
@@ -92,7 +95,8 @@ def process_events_file( events_file, patientWhitelist, geneToCases, patientToMu
         for arr in arrs:
             # Skip patients that aren't whitelisted
             patient, mutations = arr[0], set(arr[1:])
-            if not patientWhitelist[patient]: continue
+            if not patientWhitelist[patient]: 
+                continue
 
             # Record the events and mutations
             patients.add(patient)
@@ -112,16 +116,19 @@ def run( args ):
 
     # Load the patient whitelist (if supplied)
     if args.patient_whitelist:
-        if args.verbose > 0: print '* Loading patient whitelist...'
+        if args.verbose > 0: 
+            print('* Loading patient whitelist...')
         patientWhitelist = defaultdict( lambda : False )
         with open(args.patient_whitelist, 'r') as IN:
             patientWhitelist.update( (l.rstrip('\n').split()[0], True) for l in IN if not l.startswith('#') )
     else:
-        if args.verbose > 0: print '* No patient whitelist provided, including all patients...'
+        if args.verbose > 0: 
+            print('* No patient whitelist provided, including all patients...')
         patientWhitelist = defaultdict( lambda : True )
 
     # Load the mutations from each MAF
-    if args.verbose > 0: print '* Loading and combining {} datasets...'.format(len(args.cancer_types))
+    if args.verbose > 0: 
+        print('* Loading and combining {} datasets...'.format(len(args.cancer_types)))
     geneToCases, patientToMutations = defaultdict( set ), defaultdict( set )
     genes, patients = set(), set()
     vc, vt, vs = set(), set(), set() # variant classes/types and validation statuses
@@ -154,12 +161,12 @@ def run( args ):
 
     # Summarize the data
     if args.verbose > 0:
-        print '* Summary of mutation data...'
-        print '\tGenes: {}'.format(num_genes)
-        print '\tPatients: {} ({} hypermutators)'.format(num_patients, len(hypermutators))
-        print '\tUsed variant classes:', ', '.join(sorted(vc))
-        print '\tUsed variant types:', ', '.join(sorted(vt))
-        print '\tUsed validation statuses:', ', '.join(sorted(vs))
+        print('* Summary of mutation data...')
+        print('\tGenes: {}'.format(num_genes))
+        print('\tPatients: {} ({} hypermutators)'.format(num_patients, len(hypermutators)))
+        print('\tUsed variant classes:', ', '.join(sorted(vc)))
+        print('\tUsed variant types:', ', '.join(sorted(vt)))
+        print('\tUsed validation statuses:', ', '.join(sorted(vs)))
 
     # Output to file
     with open(args.output_file, 'w') as OUT:
@@ -171,10 +178,11 @@ def run( args ):
                       patient_whitelist_file=os.path.abspath(args.patient_whitelist) if args.patient_whitelist else None,
                       hypermutators_file=os.path.abspath(args.hypermutators_file) if args.hypermutators_file else None)
         output = dict(params=params, patients=patients, genes=genes, hypermutators=list(hypermutators),
-                      geneToCases=dict( (g, list(cases)) for g, cases in geneToCases.items()),
+                      geneToCases=dict( (g, list(cases)) for g, cases in list(geneToCases.items())),
                       patientToType=patientToType,
-                      patientToMutations=dict( (p, list(muts)) for p, muts in patientToMutations.items()),
+                      patientToMutations=dict( (p, list(muts)) for p, muts in list(patientToMutations.items())),
                       num_genes=num_genes, num_patients=num_patients)
         json.dump( output, OUT )
 
-if __name__ == '__main__': run( get_parser().parse_args( sys.argv[1:]) )
+if __name__ == '__main__': 
+    run( get_parser().parse_args( sys.argv[1:]) )
