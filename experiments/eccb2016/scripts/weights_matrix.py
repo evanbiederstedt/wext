@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 # Load required modules
 import matplotlib
@@ -17,7 +17,7 @@ args = parser.parse_args(sys.argv[1:])
 assert( len(args.cancers) == len(args.weights_files) == len(args.mutation_files) )
 
 # Load the mutation file
-print '* Loading mutation files...'
+print('* Loading mutation files...')
 cancerToWeights, cancerToPatients, cancerToGenes, cancerToHypermutators, patientToMutations, geneToCases = dict(), dict(), dict(), dict(), dict(), dict()
 for cancer, mutation_file, weights_file in zip(args.cancers, args.mutation_files, args.weights_files):
     with open(mutation_file, 'r') as IN:
@@ -28,24 +28,25 @@ for cancer, mutation_file, weights_file in zip(args.cancers, args.mutation_files
         cancerToHypermutators[cancer] = set(obj['hypermutators'])
         geneToCases[cancer] = obj['geneToCases']
         patientToMutations[cancer] = dict( (p, set()) for p in obj['patients'] )
-        for g, cases in geneToCases[cancer].iteritems():
+        for g, cases in list(geneToCases[cancer].items()):
             for p in cases:
                 patientToMutations[cancer][p].add( g )
     cancerToWeights[cancer] = np.load(weights_file)
-    print '\t{}\n\t\t- Genes: {}\n\t\t- Patients: {}'.format(cancer, num_genes, num_patients)
+    print('\t{}\n\t\t- Genes: {}\n\t\t- Patients: {}'.format(cancer, num_genes, num_patients))
 
 # Set up the figure
 fig, axes = plt.subplots( 1, len(args.cancers))
 fig.set_size_inches( len(args.cancers) * 5, 5)
-min_weight = min([ np.min(W) for W in cancerToWeights.values() ])
-print 'Min weight:', min_weight
+min_weight = min([ np.min(W) for W in list(cancerToWeights.values()) ])
+print('Min weight:', min_weight)
+
 for ax, cancer in zip(axes, args.cancers):
     # Sort the weights so that hypermutators are all on one side
     patients = cancerToPatients[cancer]
     genes = cancerToGenes[cancer]
     hypermutators = cancerToHypermutators[cancer]
     num_non_hypermutators = len(set(patients) - hypermutators)
-    patient_indices = sorted(range(len(patients)), key=lambda p: (patients[p] in hypermutators, len(patientToMutations[cancer][patients[p]])))
+    patient_indices = sorted(list(range(len(patients))), key=lambda p: (patients[p] in hypermutators, len(patientToMutations[cancer][patients[p]])))
     gene_indices = sorted([ i for i, g in enumerate(genes) if g in geneToCases[cancer]], key=lambda g: len(geneToCases[cancer].get(genes[g], [])), reverse=True)
     weights = [ row[patient_indices] for row in cancerToWeights[cancer][gene_indices] ]
 

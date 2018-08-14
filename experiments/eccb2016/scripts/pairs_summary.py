@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 # Load required modules
 import matplotlib
@@ -86,7 +86,7 @@ for cancer in cancers:
                         "Cancer": cancer})
 df = pd.DataFrame(items)
 
-print 'Testing {} pairs...'.format(len(weighted_exact_pvals))
+print('Testing {} pairs...'.format(len(weighted_exact_pvals)))
 
 # Set up the figure
 fig, ((ax1, ax2, ax3, ax4)) = plt.subplots(1, 4)
@@ -138,15 +138,15 @@ with open(args.table_file, 'w') as OUT:
 # Output the correlation between
 all_correlation = spearmanr(weighted_exact_pvals, weighted_saddlepoint_pvals)
 tail_correlation = spearmanr(weighted_exact_tail_pvals, weighted_saddlepoint_tail_pvals)
-print '-' * 14, 'Correlation: WRE (Saddlepoint) and WRE (Recursive)', '-' * 14
-print 'All: \\rho={:.5}, P={:.5}'.format(*all_correlation)
-print '\Phi_WR < 10^-4: \\rho={:.5}, P={:.5}'.format(*tail_correlation)
+print('-' * 14, 'Correlation: WRE (Saddlepoint) and WRE (Recursive)', '-' * 14)
+print('All: \\rho={:.5}, P={:.5}'.format(*all_correlation))
+print('\Phi_WR < 10^-4: \\rho={:.5}, P={:.5}'.format(*tail_correlation))
     
 # Output a table summarizing the runtimes (Table 3)
-print '-' * 35, 'Runtimes', '-' * 35
+print('-' * 35, 'Runtimes', '-' * 35)
 tbl = ['#Method\tMinimum\tMedian\tMaximum\tTotal']
 for method in ["WRE (Exact)", "WRE (Saddlepoint)"]:
-    print method, sum(list(df.loc[df['Method'] == method]['Runtime (seconds)']))
+    print(method, sum(list(df.loc[df['Method'] == method]['Runtime (seconds)'])))
 
 # Output to file
 plt.tight_layout()

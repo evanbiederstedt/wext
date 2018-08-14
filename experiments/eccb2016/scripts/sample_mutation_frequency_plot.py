@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 # Load required modules
 import matplotlib
@@ -26,12 +26,12 @@ for mutation_file, cancer in zip(args.mutation_files, args.cancers):
 
         # Make a map of patients to their mutated genes
         patientToMutations = dict( (p, set()) for p in patients )
-        for g, cases in obj['geneToCases'].iteritems():
+        for g, cases in list(obj['geneToCases'].items()):
             for p in cases:
                 patientToMutations[p].add( g )
 
         # Assemble the data into dictionaries for Pandas
-        for p, mutations in patientToMutations.iteritems():
+        for p, mutations in list(patientToMutations.items()):
             ty = "Hypermutator" if p in hypermutators else "Non-hypermutator"
             items.append({ "Sample": p, "Mutated genes per sample": len(mutations),
                            "Type": ty, "Cancer": cancer })
@@ -51,4 +51,4 @@ for c in args.cancers:
     non_hyper_rates = list(df.loc[(df['Cancer'] == c) & (df['Type'] == "Non-hypermutator")]['Mutated genes per sample'])
     tbl.append([ c, np.median(all_rates), np.median(hyper_rates) if len(hyper_rates) > 0 else '--', np.median(non_hyper_rates)])
 
-print aligned_plaintext_table('\n'.join([ '\t'.join(map(str, row)) for row in tbl ]))
+print(aligned_plaintext_table('\n'.join([ '\t'.join(map(str, row)) for row in tbl ])))

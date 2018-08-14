@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 # Load required modules
 import sys, os, argparse, json
@@ -28,8 +28,8 @@ obj['genes'] = sorted(obj['geneToCases'].keys())
 obj['num_genes'] = len(obj['genes'])
 obj['params']['lengths_file'] = os.path.abspath(args.lengths_file)
 obj['genes_with_no_length_removed'] = sorted(original_genes - set(obj['genes']))
-obj['patientToMutations'] = dict( (p, sorted(set(muts) & remaining_genes)) for p, muts in obj['patientToMutations'].iteritems() )
-print 'Removed {} genes with no length'.format(len(obj['genes_with_no_length_removed']))
+obj['patientToMutations'] = dict((p, sorted(set(muts) & remaining_genes)) for p, muts in iter(list(obj['patientToMutations'].items())))
+print('Removed {} genes with no length'.format(len(obj['genes_with_no_length_removed'])))
 
 # Output the new file
 with open(args.output_file, 'w') as OUT:

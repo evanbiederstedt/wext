@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 # Load required modules
 import sys, os, argparse, json, multiprocessing as mp
@@ -42,7 +42,7 @@ for root, dirs, files in os.walk( args.input_directory ):
     json_files = [ '{}/{}'.format(root, f) for f in files if f.lower().endswith('.json') ]
 
 # Set up the multiprocessing and run
-print '* Loading {} JSON files...'.format(len(json_files))
+print('* Loading {} JSON files...'.format(len(json_files)))
 num_cores = args.num_cores if args.num_cores != -1 else mp.cpu_count()
 if num_cores != 1:
     pool = mp.Pool(num_cores)
@@ -58,7 +58,7 @@ if num_cores != 1:
     pool.join()
 
 # Merge the results
-print '\t- Merging results...'
+print('\t- Merging results...')
 setToCount       = defaultdict( int )
 setToRuntime     = defaultdict( float )
 setToObs         = dict()
@@ -72,16 +72,16 @@ for counts, runtimes, obs, N in results:
 
 setToPval = dict( (M, count/num_permutations) for M, count in setToCount.iteritems() )
 
-print '\t- Loaded {} sets with {} permutations'.format(len(setToPval), int(num_permutations))
+print('\t- Loaded {} sets with {} permutations'.format(len(setToPval), int(num_permutations)))
 
 # Compute FDR
-print '* Computing FDRs...'
+print('* Computing FDRs...')
 tested_sets = setToPval.keys()
 pvals       = [ setToPval[M] for M in tested_sets ]
 setToFDR    = dict(zip(tested_sets, multiple_hypothesis_correction(pvals, method="BY")))
 
 # Output the merged file
-print '* Outputting to file...'
+print('* Outputting to file...')
 k                  = len(tested_sets[0])
 args.json_format   = True
 args.test          = 'RCE'

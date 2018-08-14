@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 # Load required modules
 import matplotlib
@@ -36,16 +36,16 @@ for permuted_file in args.permutational_files:
     with open(permuted_file, 'r') as IN:
         setToPermuted.update( json.load(IN)['setToPval'] )
 
-for M, pval in setToPermuted.iteritems():
+for M, pval in list(setToPermuted.items()):
     if pval == 0:
         setToPermuted[M] = 1./args.num_permutations
 
 sets = set(setToWeighted.keys()) & set(setToUnweighted.keys()) & set(setToPermuted.keys())
 
-print '* Loaded weighted/unweighted P-values in {} triples...'.format(len(setToWeighted))
-print '\t- Weighted range: [{}, {}]'.format(np.min(setToWeighted.values()), np.max(setToWeighted.values()))
-print '\t- Unweighted range: [{}, {}]'.format(np.min(setToUnweighted.values()), np.max(setToUnweighted.values()))
-print '* Loaded permuted P-values for {} sets ({} intersection)...'.format(len(setToPermuted), len(sets))
+print('* Loaded weighted/unweighted P-values in {} triples...'.format(len(setToWeighted)))
+print('\t- Weighted range: [{}, {}]'.format(np.min(setToWeighted.values()), np.max(setToWeighted.values())))
+print('\t- Unweighted range: [{}, {}]'.format(np.min(setToUnweighted.values()), np.max(setToUnweighted.values())))
+print('* Loaded permuted P-values for {} sets ({} intersection)...'.format(len(setToPermuted), len(sets)))
 
 # Create two scatter plots
 fig, (ax1, ax2) = plt.subplots(1, 2)
@@ -77,17 +77,17 @@ ax2.set_xlim([1./(10*args.num_permutations), 1.])
 ax2.plot(ax2.get_xlim(), ax2.get_xlim(), ls="--", c=".3")
 
 # Output maximum deviation and correlations
-print 'Max deviation permutational vs. weighted (1E-3 to 1E-5):',
+print('Max deviation permutational vs. weighted (1E-3 to 1E-5):')
 deviations = [ (x, y, np.abs(y/x)) for x, y in zip(xs, ys) if 1e-3 > x > 1e-5 ]
 if deviations:
-    print max(deviations, key=lambda (x, y, z): z)
+    print(max(deviations, key=lambda (x, y, z): z))
 else:
-    print 'None in p-value interval'
+    print('None in p-value interval')
 
-print 'Unweighted correlation (all): \\rho={}'.format(unweighted_rho)
-print 'Unweighted correlation (P<0.001): \\rho={}'.format(unweighted_tail_rho)
-print 'Weighted correlation (all): \\rho={}'.format(weighted_rho)
-print 'Weighted correlation (P<0.001): \\rho={}'.format(weighted_tail_rho)
+print('Unweighted correlation (all): \\rho={}'.format(unweighted_rho))
+print('Unweighted correlation (P<0.001): \\rho={}'.format(unweighted_tail_rho))
+print('Weighted correlation (all): \\rho={}'.format(weighted_rho))
+print('Weighted correlation (P<0.001): \\rho={}'.format(weighted_tail_rho))
 
 # Output to file
 plt.tight_layout()

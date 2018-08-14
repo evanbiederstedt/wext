@@ -1,4 +1,5 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
+
 import numpy as np
 
 # Add a y=x line to the given matplotlib axis
@@ -29,14 +30,14 @@ def aligned_plaintext_table(table, sep='\t', spaces=2):
 
     # Find numbers of rows and columns.
     m = len(rows)
-    lengths = map(len, rows)
+    lengths = list(map(len, rows))
     n = max(lengths)
 
     # Pad rows with a deficient number of columns.
     entries = [[rows[i][j] if j<lengths[i] else '' for j in range(n)] for i in range(m)]
 
     # Find column widths.
-    sizes = [max(len(entries[i][j]) for i in range(m)) for j in range(n)]
+    sizes = [max(len(entries[i][j]) for i in list(range(m))) for j in range(n)]
 
     # Return results.
     return '\n'.join([''.join([entries[i][j].rjust(sizes[j]+spaces) for j in range(n)]).rstrip() for i in range(m)])
@@ -80,14 +81,14 @@ def rank(a, reverse=False, ties=2):
     elif ties==1 :
         z = np.zeros(n, dtype=y.dtype)
         j = 0
-        for i in xrange(1, n):
+        for i in range(1, n):
             if x[y[i]]!=x[y[i-1]]:
                 j += 1
             z[y[i]] = j
     elif ties==2:
         z = np.zeros(n, dtype=y.dtype)
         j = 0
-        for i in xrange(1, n):
+        for i in range(1, n):
             if x[y[i]]!=x[y[i-1]]:
                 j = i
             z[y[i]] = j

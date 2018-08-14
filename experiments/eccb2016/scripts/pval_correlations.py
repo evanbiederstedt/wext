@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 # Load required modules
 import sys, os, argparse, pandas as pd
@@ -46,33 +46,33 @@ for val, indices in [("All", []), (0, 1./args.num_permutations), (1./args.num_pe
                 row.append(rho)
         tbl.append(row)
 
-    print '-' * 80
-    print 'CORRELATIONS ({})'.format(val)
-    print aligned_plaintext_table('\n'.join([ '\t'.join(map(str, row)) for row in tbl ]) )
+    print('-' * 80)
+    print('CORRELATIONS ({})'.format(val))
+    print(aligned_plaintext_table('\n'.join([ '\t'.join(map(str, row)) for row in tbl ])))
 
 permutational_pvals_no_zeros = [ p for p in permutational_pvals_with_zeros if p > 0 ]
 for method in ["Fisher's exact test", "Weighted (exact test)", "Weighted (saddlepoint)"]:
     pvals = list(df.loc[df['Method'] == method]['P-value'])
-    print 'Correlation:', method, 'with Permutational'
+    print('Correlation:', method, 'with Permutational')
     rho, pval = spearmanr(permutational_pvals, pvals)
-    print '\tIncluding P < {}: N={}, \\rho={}, P={}'.format(1./args.num_permutations, len(pvals), rho, pval)
+    print('\tIncluding P < {}: N={}, \\rho={}, P={}'.format(1./args.num_permutations, len(pvals), rho, pval))
     pvals_no_zeros = [ p for i, p in enumerate(pvals) if permutational_pvals_with_zeros[i] > 0 ]
     rho, pval = spearmanr(permutational_pvals_no_zeros, pvals_no_zeros)
-    print '\tWithout P < {}: N={}, \\rho={}, P={}'.format(1./args.num_permutations, len(pvals_no_zeros), rho, pval)
-print
+    print('\tWithout P < {}: N={}, \\rho={}, P={}'.format(1./args.num_permutations, len(pvals_no_zeros), rho, pval))
+
 # Compute the correlations of weighted saddlepoint and exact test
 weighted_exact_pvals = list(df.loc[df['Method'] == 'Weighted (exact test)']['P-value'])
 weighted_saddlepoint_pvals = list(df.loc[df['Method'] == 'Weighted (saddlepoint)']['P-value'])
 rho, pval = spearmanr(weighted_exact_pvals, weighted_saddlepoint_pvals)
 
-print 'Correlation of weighted exact test and saddlepoint (all P-values)'
-print '\tN={}, \\rho: {}, P={}'.format(len(weighted_exact_pvals), rho, pval)
+print('Correlation of weighted exact test and saddlepoint (all P-values)')
+print('\tN={}, \\rho: {}, P={}'.format(len(weighted_exact_pvals), rho, pval))
 
 tail_weighted_exact_pvals = [ p for p in weighted_exact_pvals if p < 1e-4 ]
 rho, pval = spearmanr(tail_weighted_exact_pvals, [ p for i, p in enumerate(weighted_saddlepoint_pvals) if weighted_exact_pvals[i] < 1e-4])
-print 'Correlation of weighted exact test and saddlepoint (P < 0.0001)'
-print '\tN={}, \\rho: {}, P={}'.format(len(tail_weighted_exact_pvals), rho, pval)
+print('Correlation of weighted exact test and saddlepoint (P < 0.0001)')
+print('\tN={}, \\rho: {}, P={}'.format(len(tail_weighted_exact_pvals), rho, pval))
 
 rho, pval = spearmanr(tail_weighted_exact_pvals, [ p for i, p in enumerate(permutational_pvals) if weighted_exact_pvals[i] < 1e-4])
-print 'Correlation of weighted exact test and permutational (P < 0.0001)'
-print '\tN={}, \\rho: {}, P={}'.format(len(tail_weighted_exact_pvals), rho, pval)
+print('Correlation of weighted exact test and permutational (P < 0.0001)')
+print('\tN={}, \\rho: {}, P={}'.format(len(tail_weighted_exact_pvals), rho, pval))

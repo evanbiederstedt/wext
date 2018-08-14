@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 # Import modules.
 import numpy as np, os, sys, argparse, json
@@ -33,7 +33,7 @@ def run( args ):
     indexToPatient = dict( (j+1, p) for j, p in enumerate(patients) )
 
     edges = set()
-    for gene, cases in geneToCases.iteritems():
+    for gene, cases in list(geneToCases.items()):
         for patient in cases:
             edges.add( (geneToIndex[gene], patientToIndex[patient]) )
 
@@ -57,16 +57,16 @@ def run( args ):
         permutedPatientToMutations[patient].add(gene)
         
     # Verify the number of mutations per gene/patient is preserved
-    for g, cases in geneToCases.iteritems():
+    for g, cases in list(geneToCases.items()):
         assert( len(cases) == len(permutedGeneToCases[g]) )
 
-    for p, muts in patientToMutations.iteritems():
+    for p, muts in list(patientToMutations.items()):
         assert( len(muts) == len(permutedPatientToMutations[p]) )
 
     # Save edge list.
     output_file = '{}-{}.json'.format(args.output_prefix, args.job_id)
     permutation = dict(params=params, permutation_number=args.job_id,
-                       geneToCases=dict( (g, list(cases)) for g, cases in permutedGeneToCases.iteritems()))
+                       geneToCases=dict( (g, list(cases)) for g, cases in iter(list(permutedGeneToCases.items()))))
     with open(output_file, 'w') as OUT: json.dump( permutation, OUT )
     
 if __name__ == '__main__':
