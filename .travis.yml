@@ -11,6 +11,9 @@ install:
     - sudo apt-get -y install python-matplotlib
     - pip install codecov
     - pip install -r requirements.txt
+    - cd wext
+    - python setup.py build
+    - f2py -c src/fortran/bipartite_edge_swap_module.f95 -m bipartite_edge_swap_module
 script:
     - nosetests
 after_success:
