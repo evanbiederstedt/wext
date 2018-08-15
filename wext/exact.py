@@ -2,7 +2,7 @@
 
 import numpy as np
 import wext_exact_test
-from constants import *
+from .constants import *
 
 def exact_test(t, x, p, verbose=False):
     k = len(x)

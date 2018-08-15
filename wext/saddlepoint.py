@@ -5,7 +5,7 @@ from numpy.linalg import det
 from scipy.optimize import fsolve
 from scipy.stats import norm
 import itertools
-from constants import *
+from .constants import *
 
 def check_condition(state, condition):
 

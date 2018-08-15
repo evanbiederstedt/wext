@@ -2,10 +2,10 @@
 
 # Load required modules
 import numpy as np
-from constants import *
-from exact import exact_test
+from .constants import *
+from .exact import exact_test
 import cpoibin
-from saddlepoint import saddlepoint, check_condition
+from .saddlepoint import saddlepoint, check_condition
 from comet_exact_test import comet_exact_test
 import warnings
 

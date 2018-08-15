@@ -7,9 +7,9 @@ from collections import defaultdict, Counter
 from math import ceil, isnan
 
 # Load local modules
-from exclusivity_tests import wre_test, re_test, general_wre_test
-from constants import *
-from statistics import multiple_hypothesis_correction
+from .exclusivity_tests import wre_test, re_test, general_wre_test
+from .constants import *
+from .statistics import multiple_hypothesis_correction
 
 ################################################################################
 # Permutational test

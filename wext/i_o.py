@@ -3,7 +3,7 @@
 # Load required modules
 import sys, os, json, numpy as np
 from collections import defaultdict
-from constants import *
+from .constants import *
 
 # Load mutation data from one of our processed JSON file
 def load_mutation_data( mutation_file, min_freq=1 ):
