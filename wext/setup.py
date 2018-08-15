@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 """Compiles the C modules used by the weighted exclusivity test."""
 

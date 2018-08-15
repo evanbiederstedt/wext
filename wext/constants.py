@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 # P-values are called invalid if P > 1+PTOL or P < -PTOL
 PTOL = 10**-3

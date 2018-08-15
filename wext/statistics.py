@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 import numpy as np
 
@@ -36,7 +36,7 @@ def multiple_hypothesis_correction(p_values_, method='BH'):
 
         sorted_q_values = np.zeros(n)
         sorted_q_values[n-1] = min(sorted_p_values[n-1], 1.0)
-        for i in reversed(range(n-1)):
+        for i in reversed(list(range(n-1))):
             sorted_q_values[i] = min(float(n)/float(i+1)*sorted_p_values[i], sorted_q_values[i+1])
 
         q_values = np.zeros(n)
@@ -49,7 +49,7 @@ def multiple_hypothesis_correction(p_values_, method='BH'):
         c = np.sum(1.0/np.arange(1, n+1, dtype=np.float64))
         sorted_q_values = np.zeros(n)
         sorted_q_values[n-1] = min(c*sorted_p_values[n-1], 1.0)
-        for i in reversed(range(n-1)):
+        for i in reversed(list(range(n-1))):
             sorted_q_values[i] = min(c*(float(n)/float(i+1))*sorted_p_values[i], sorted_q_values[i+1])
 
         q_values = np.zeros(n)

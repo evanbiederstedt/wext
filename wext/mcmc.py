@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python3
 
 import sys, os, numpy as np
 from collections import defaultdict
@@ -10,7 +10,8 @@ from enumerate_sets import observed_values
 from exclusivity_tests import re_test, wre_test
 
 def mcmc(ks, geneToCases, num_patients, method, test, geneToP, seed, annotations=set(), verbose=0, step_len=100, nchains=1, niters=1000, alpha=1):
-    if verbose > 0: print '-' * 33, 'Running MCMC', '-' * 33
+    if verbose > 0: 
+        print('-' * 33, 'Running MCMC', '-' * 33)
 
     # Set up a local version of the weight function
     if test == WRE:
@@ -45,7 +46,7 @@ def mcmc(ks, geneToCases, num_patients, method, test, geneToP, seed, annotations
         return sum( _weight(M) for M in collection )
 
     def _to_collection(solution):
-        return frozenset( frozenset(M) for M in solution.values() )
+        return frozenset( frozenset(M) for M in list(solution.values()) )
 
     # Compute the acceptance ratio
     def _log_accept_ratio( W_current, W_next ): return W_next - W_current
@@ -53,11 +54,12 @@ def mcmc(ks, geneToCases, num_patients, method, test, geneToP, seed, annotations
     # Set up PRNG, sample space, and output
     random_seed(seed)
     t          = len(ks)
-    genespace  = geneToCases.keys()
-    setsToFreq = [ defaultdict(int) for _ in xrange(nchains) ]
+    genespace  = list(geneToCases.keys())
+    setsToFreq = [ defaultdict(int) for _ in range(nchains) ]
     setToPval, setToObs =  dict(), dict()
-    for c in xrange(nchains):
-        if verbose > 0: print '- Experiment', c+1
+    for c in range(nchains):
+        if verbose > 0: 
+            print('- Experiment', c+1)
 
         # Seed Markov chain
         soln, assigned = choose_random_set(ks, genespace)
@@ -75,8 +77,8 @@ def mcmc(ks, geneToCases, num_patients, method, test, geneToP, seed, annotations
                 sys.stdout.flush()
 
             # Sample the next gene to swap in/around the set
-            next_soln = dict( (index, set(M)) for index, M in soln.iteritems() )
-            next_assigned = dict(assigned.items())
+            next_soln = dict( (index, set(M)) for index, M in list(soln.items()) )
+            next_assigned = dict(list(assigned.items()))
             next_gene = choice(genespace)
 
             # There are two possibilities for the next gene
@@ -86,7 +88,7 @@ def mcmc(ks, geneToCases, num_patients, method, test, geneToP, seed, annotations
                 # if we only have one set, we can't swap between sets
                 if t == 1: continue
                 i = next_assigned[next_gene]
-                swap_gene = choice([ g for g in next_assigned.keys() if g not in next_soln[i] ])
+                swap_gene = choice([ g for g in list(next_assigned.keys()) if g not in next_soln[i] ])
                 j = next_assigned[swap_gene]
                 next_assigned[swap_gene] = i
                 next_soln[i].add(swap_gene)
@@ -101,14 +103,15 @@ def mcmc(ks, geneToCases, num_patients, method, test, geneToP, seed, annotations
             # 2) The gene is not in the current solution. In this case, we choose
             #    a random gene in the solution to remove, and add the next gene.
             else:
-                swap_gene = choice(next_assigned.keys())
+                swap_gene = choice(list(next_assigned.keys()))
                 j = next_assigned[swap_gene]
                 del next_assigned[swap_gene]
                 next_assigned[next_gene] = j
                 next_soln[j].remove(swap_gene)
                 next_soln[j].add(next_gene)
 
-                if not _valid_set(next_soln[j]): continue
+                if not _valid_set(next_soln[j]): 
+                    continue
 
             # Compare the current soln to the next soln
             next_weight = _collection_weight(_to_collection(next_soln))
@@ -121,12 +124,12 @@ def mcmc(ks, geneToCases, num_patients, method, test, geneToP, seed, annotations
                 setsToFreq[c][_to_collection(soln)] += 1
 
         if verbose > 0:
-            print '\r[' + ('='*71) + '>] 100%'
+            print('\r[' + ('='*71) + '>] 100%')
 
     # Merge the various chains
     setsToTotalFreq = defaultdict(int)
     for counter in setsToFreq:
-        for sets, freq in counter.iteritems():
+        for sets, freq in list(counter.items()):
             setsToTotalFreq[sets] += freq
 
     return setsToTotalFreq, setToPval, setToObs

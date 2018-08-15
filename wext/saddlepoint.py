@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 import numpy as np
 from numpy.linalg import det
 from scipy.optimize import fsolve
@@ -82,7 +84,7 @@ def saddlepoint(observed_t, observed_y, probabilities, condition='exclusivity'):
 
     w = np.zeros((2**k, n))
     for i, state in enumerate(states):
-        w[i, :] = np.product(p[state, range(k), :], axis=0)
+        w[i, :] = np.product(p[state, list(range(k)), :], axis=0)
 
     # Define the moment generating functions and cumulant generating functions.  These functions
     # use the above constants.
