@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 import numpy as np
-from .wext_exact_test import *
+import .wext_exact_test 
 from .constants import *
 
 def exact_test(t, x, p, verbose=False):
