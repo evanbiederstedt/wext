@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 
 # Import modules.
 import numpy as np, os, sys, argparse, json
@@ -16,6 +16,7 @@ def get_parser():
     parser.add_argument('-j', '--job_id', type=int, required=False,
                         default=os.environ.get('SGE_TASK_ID', 0))
     return parser
+
 
 def run( args ):
     # Load WExT

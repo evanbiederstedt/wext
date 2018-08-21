@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 
 # Load required modules
 import sys, os, argparse, numpy as np, random
@@ -81,4 +81,5 @@ def run(args):
         raise NotImplementedError('Data generation mode "%s" is not implemented.' % args.mode)
     return
 
-if __name__ == '__main__': run( get_parser().parse_args(sys.argv[1:]) )
+if __name__ == '__main__': 
+    run( get_parser().parse_args(sys.argv[1:]) )

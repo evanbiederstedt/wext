@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 
 import numpy as np
 
@@ -15,6 +15,7 @@ def add_y_equals_x(ax, c='k', line_style='--', alpha=0.75):
     ax.set_aspect('equal')
     ax.set_xlim(lims)
     ax.set_ylim(lims)
+
 
 def aligned_plaintext_table(table, sep='\t', spaces=2):
     """
@@ -41,6 +42,7 @@ def aligned_plaintext_table(table, sep='\t', spaces=2):
 
     # Return results.
     return '\n'.join([''.join([entries[i][j].rjust(sizes[j]+spaces) for j in range(n)]).rstrip() for i in range(m)])
+
 
 def rank(a, reverse=False, ties=2):
     """
