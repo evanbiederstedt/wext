@@ -13,7 +13,7 @@ srcs = ['/src/c/poibinmodule.c']
 module = Extension('cpoibin', include_dirs=[numpy.get_include()],
     sources = [ thisDir + s for s in srcs ],
     extra_compile_args = ['-g', '-O0'])
-setup(name='poibin', version='0.0.1',  ext_modules=[module],
+setup(name='cpoibin', version='0.0.1',  ext_modules=[module],
       description='Module for analyzing the Poisson-Binomial distribution.')
 
 # Compile the weighted enrichment module
