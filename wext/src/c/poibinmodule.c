@@ -73,7 +73,8 @@ PyObject *py_pmf(PyObject *self, PyObject *args){
 
 // Register the functions we want to be accessible from Python
 PyMethodDef poibinMethods[] = {
-    {"pmf", py_pmf, METH_VARARGS, "Poisson-Binomial PMF"}
+    {"pmf", py_pmf, METH_VARARGS, "Poisson-Binomial PMF"}, 
+    {NULL, NULL, 0, NULL}
 };
 
 // Note that the suffix of init has to match the name of the module,

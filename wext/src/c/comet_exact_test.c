@@ -281,8 +281,11 @@ struct Pvalues comet_exact_test(int k, int N, int *ctbl, double pvalthresh){
 
 }
 
+
+
+
 ////////////////////////////////////////////////////////////////////////////////
-// Python registration
+// Python wrapper functions
 ////////////////////////////////////////////////////////////////////////////////
 
 // The CoMEt exact test, callable from Python
@@ -307,7 +310,7 @@ PyObject *py_comet_exact_test(PyObject *self, PyObject *args){
     tbl[i] = (int) PyLong_AsLong (PyList_GetItem(py_tbl, i));
 
   // Compute the P-values
-  pval   = comet_exact_test(k, N, tbl, pvalthresh);
+  pval = comet_exact_test(k, N, tbl, pvalthresh);
 
   // Free memory 
   free(tbl);
@@ -316,10 +319,13 @@ PyObject *py_comet_exact_test(PyObject *self, PyObject *args){
 
 }
 
+// methods definition: cometExactTest
+
 
 // Register the functions we want to be accessible from Python
 PyMethodDef cometExactTest[] = {
-    {"comet_exact_test", py_comet_exact_test, METH_VARARGS, "CoMEt exact test"}
+    {"comet_exact_test", py_comet_exact_test, METH_VARARGS, "CoMEt exact test"}, 
+    {NULL, NULL, 0, NULL}
 };
 
 // Note that the suffix of init has to match the name of the module,

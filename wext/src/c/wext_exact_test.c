@@ -39,6 +39,8 @@ double joint_mass(int n, int z, int x, int y, double *p_x, double *p_y, double *
     return cache[n][z][x][y];
 }
 
+// python wrapper
+
 PyObject *py_conditional(PyObject *self, PyObject *args){
     // Parameters
     int i, j, i2, j2, N, x, y, *zs, num_zs;
@@ -206,7 +208,8 @@ PyObject *triple_exact_test(PyObject *self, PyObject *args){
 // Register the functions we want to be accessible from Python
 PyMethodDef weightedEnrichmentMethods[] = {
     {"conditional", py_conditional, METH_VARARGS, "Weighted enrichment test conditional PMF for pairs"},
-    {"triple_exact_test", triple_exact_test, METH_VARARGS, "Weighted enrichment test for triples"}
+    {"triple_exact_test", triple_exact_test, METH_VARARGS, "Weighted enrichment test for triples"}, 
+    {NULL, NULL, 0, NULL}
 };
 
 // Note that the suffix of init has to match the name of the module,
