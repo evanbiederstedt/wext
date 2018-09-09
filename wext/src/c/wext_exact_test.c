@@ -41,7 +41,7 @@ double joint_mass(int n, int z, int x, int y, double *p_x, double *p_y, double *
 
 // python wrapper
 
-PyObject *py_conditional(PyObject *self, PyObject *args){
+static PyObject *py_conditional(PyObject *self, PyObject *args){
     // Parameters
     int i, j, i2, j2, N, x, y, *zs, num_zs;
     double *p_x, *p_y, joint_marginal, mass, ****cache;
@@ -138,7 +138,7 @@ double P(int n, int t, int w, int x, int y, double **p, double *****cache){
 	return cache[n][t][w][x][y];
 }
 
-PyObject *triple_exact_test(PyObject *self, PyObject *args){
+static PyObject *triple_exact_test(PyObject *self, PyObject *args){
     // Parameters
     int i, j, i2, j2, i3, N, w, x, y, t, T;
     double **p, marginals, joint, result, *****cache;
@@ -204,19 +204,43 @@ PyObject *triple_exact_test(PyObject *self, PyObject *args){
     return Py_BuildValue("f", result);
 }
 
+
+// methods definition: weightedEnrichmentMethods
+// name of module: wext_exact_test
+
 ////////////////////////////////////////////////////////////////////////////////
 // Register the functions we want to be accessible from Python
-PyMethodDef weightedEnrichmentMethods[] = {
+static PyMethodDef weightedEnrichmentMethods[] = {
     {"conditional", py_conditional, METH_VARARGS, "Weighted enrichment test conditional PMF for pairs"},
     {"triple_exact_test", triple_exact_test, METH_VARARGS, "Weighted enrichment test for triples"}, 
     {NULL, NULL, 0, NULL}
 };
 
+// PYTHON 2
 // Note that the suffix of init has to match the name of the module,
 // both here and in the setup.py file
-PyMODINIT_FUNC initwext_exact_test(void) {
-    PyObject *m = Py_InitModule("wext_exact_test", weightedEnrichmentMethods);
-    if (m == NULL) {
-        return;
-    }
+// PyMODINIT_FUNC initwext_exact_test(void) {
+//     PyObject *m = Py_InitModule("wext_exact_test", weightedEnrichmentMethods);
+//     if (m == NULL) {
+//         return;
+//     }
+// }
+
+// define module structure
+
+static struct PyModuleDef wext_exact_test = {
+    PyModuleDef_HEAD_INIT,   // required
+    "wext_exact_test",           // name of module
+    "documentation detailed here",   // documentation
+    -1,
+    weightedEnrichmentMethods             // method definitions
+};
+
+
+// finally, write the initalizer function
+
+PyMODINIT_FUNC PyInit_wext_exact_test(void)  
+{
+    return PyModule_Create(&wext_exact_test);
 }
+

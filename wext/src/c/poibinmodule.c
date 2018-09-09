@@ -45,7 +45,7 @@ double pmf(int k, int N, double *ps){
     return mass;
 }
 
-PyObject *py_pmf(PyObject *self, PyObject *args){
+static PyObject *py_pmf(PyObject *self, PyObject *args){
   // Parameters
   int i, k, N;
   double result, *ps;
@@ -71,17 +71,41 @@ PyObject *py_pmf(PyObject *self, PyObject *args){
   return Py_BuildValue("d", result);
 }
 
+
+// methods definition: poibinMethods
+// name of module: cpoibin
+
 // Register the functions we want to be accessible from Python
-PyMethodDef poibinMethods[] = {
+static PyMethodDef poibinMethods[] = {
     {"pmf", py_pmf, METH_VARARGS, "Poisson-Binomial PMF"}, 
     {NULL, NULL, 0, NULL}
 };
 
+// PYTHON 2
 // Note that the suffix of init has to match the name of the module,
 // both here and in the setup.py file
-PyMODINIT_FUNC initcpoibin(void) {
-    PyObject *m = Py_InitModule("cpoibin", poibinMethods);
-    if (m == NULL) {
-        return;
-    }
+// PyMODINIT_FUNC initcpoibin(void) {
+//    PyObject *m = Py_InitModule("cpoibin", poibinMethods);
+//    if (m == NULL) {
+//        return;
+//    }
+// }
+
+// define the module structure
+
+static struct PyModuleDef cpoibin = {
+  PyModuleDef_HEAD_INIT,   // required
+  "cpoibin",           // name of module
+  "ocumentation detailed here",   // documentation
+  -1,
+  poibinMethods             // method definitions
+};
+
+// finally, write the initalizer function
+
+PyMODINIT_FUNC PyInit_cpoibin(void)  
+{
+    return PyModule_Create(&cpoibin);
 }
+
+
