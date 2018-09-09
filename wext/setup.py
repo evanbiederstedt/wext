@@ -26,8 +26,8 @@ setup(name='wext_exact_test', version='0.0.1',  ext_modules=[module],
 
 # Compile the CoMEt exact test module
 srcs = ['/src/c/comet_exact_test.c']
-module = Extension('comet_exact_test', include_dirs=[numpy.get_include()],
+module = Extension('comet_exact_tests', include_dirs=[numpy.get_include()],
     sources = [ thisDir + s for s in srcs ],
     extra_compile_args = ['-g', '-O0'])
-setup(name='comet_exact_test', version='0.0.1',  ext_modules=[module],
+setup(name='comet_exact_tests', version='0.0.1',  ext_modules=[module],
       description='CoMEt exact test implementation.')
