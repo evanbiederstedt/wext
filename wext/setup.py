@@ -31,3 +31,10 @@ module = Extension('comet_exact_tests', include_dirs=[numpy.get_include()],
     extra_compile_args = ['-g', '-O0'])
 setup(name='comet_exact_tests', version='0.0.1',  ext_modules=[module],
       description='CoMEt exact test implementation.')
+
+## Compile the FORTRAN extension, bipartite_edge_swap_module
+srcs = ['/src/fortran/bipartite_edge_swap_module.f95']
+module = Extension('bipartite_edge_swap_module', include_dirs=[numpy.get_include()],
+    sources = [ thisDir + s for s in srcs ]
+setup(name='bipartite_edge_swap_module', version='0.0.1',  ext_modules=[module],
+      description='FORTRAN code description')

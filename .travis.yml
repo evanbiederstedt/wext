@@ -14,7 +14,7 @@ install:
     - cd wext
     - python setup.py install
     - cd ../
-    - f2py -c wext/src/fortran/bipartite_edge_swap_module.f95 -m bipartite_edge_swap_module
+    ##- f2py -c wext/src/fortran/bipartite_edge_swap_module.f95 -m bipartite_edge_swap_module
     - pwd
     - ls
 script:
