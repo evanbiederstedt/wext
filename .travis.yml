@@ -13,8 +13,8 @@ install:
     - pip install -r requirements.txt
     - cd wext
     - python setup.py install
-    - f2py -c src/fortran/bipartite_edge_swap_module.f95 -m bipartite_edge_swap_module
     - cd ../
+    - f2py -c wext/src/fortran/bipartite_edge_swap_module.f95 -m bipartite_edge_swap_module
     - pwd
     - ls
 script:
