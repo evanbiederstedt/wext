@@ -3,7 +3,8 @@
 """Compiles the C modules used by the weighted exclusivity test."""
 
 # Load required modules
-from distutils.core import setup, Extension
+from numpy.distutils.core import setup
+from numpy.distutils.extension import Extension
 import numpy, os
 
 thisDir = os.path.dirname(os.path.realpath(__file__))
