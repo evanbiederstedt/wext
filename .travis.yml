@@ -15,6 +15,8 @@ install:
     - python setup.py build
     - f2py -c src/fortran/bipartite_edge_swap_module.f95 -m bipartite_edge_swap_module
     - cd ..
+    - pwd
+    - ls
 script:
     - nosetests
 after_success:

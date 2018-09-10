@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 import numpy as np
-from wext_exact_test import triple_exact_test
+import wext_exact_test 
 from .constants import *
 
 def exact_test(t, x, p, verbose=False):
@@ -16,7 +16,7 @@ def exact_test(t, x, p, verbose=False):
 # Wrapper for k=3 exact test C function
 def exact_test_k3(t, x, p, verbose):
     N = len(p[0])
-    return triple_exact_test( N, t, x[0], x[1], x[2], p )
+    return wext_exact_test.triple_exact_test( N, t, x[0], x[1], x[2], p )
 
 # Wrapper for k=2 exact test C function
 def exact_test_k2(t, x, y, p_x, p_y, verbose):
