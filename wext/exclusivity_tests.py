@@ -6,7 +6,7 @@ from .constants import *
 from .exact import exact_test
 import cpoibin
 from .saddlepoint import saddlepoint, check_condition
-from comet_exact_test import comet_exact_test
+from comet_exact_tests import comet_exact_test
 import warnings
 
 # Perform the weighted-row exclusivity test (WR-test) using the given method.
