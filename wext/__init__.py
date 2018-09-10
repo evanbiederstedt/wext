@@ -12,4 +12,4 @@ import wext_exact_test
 from .saddlepoint import saddlepoint
 import comet_exact_tests
 from .exclusivity_tests import re_test, wre_test
-from bipartite_edge_swap_module import bipartite_edge_swap
+import bipartite_edge_swap_module
