@@ -216,15 +216,6 @@ static PyMethodDef weightedEnrichmentMethods[] = {
     {NULL, NULL, 0, NULL}
 };
 
-// PYTHON 2
-// Note that the suffix of init has to match the name of the module,
-// both here and in the setup.py file
-// PyMODINIT_FUNC initwext_exact_test(void) {
-//     PyObject *m = Py_InitModule("wext_exact_test", weightedEnrichmentMethods);
-//     if (m == NULL) {
-//         return;
-//     }
-// }
 
 
 #if PY_MAJOR_VERSION >= 3

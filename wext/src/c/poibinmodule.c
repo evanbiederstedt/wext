@@ -81,15 +81,6 @@ static PyMethodDef poibinMethods[] = {
     {NULL, NULL, 0, NULL}
 };
 
-// PYTHON 2
-// Note that the suffix of init has to match the name of the module,
-// both here and in the setup.py file
-// PyMODINIT_FUNC initcpoibin(void) {
-//    PyObject *m = Py_InitModule("cpoibin", poibinMethods);
-//    if (m == NULL) {
-//        return;
-//    }
-// }
 
 // define the module structure
 

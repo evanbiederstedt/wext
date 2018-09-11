@@ -334,17 +334,6 @@ static PyMethodDef cometExactTest[] = {
 
 
 
-// PYTHON 2
-// Note that the suffix of init has to match the name of the module,
-// both here and in the setup.py file
-// PyMODINIT_FUNC initcomet_exact_test(void) {
-//     PyObject *m = Py_InitModule("comet_exact_test", cometExactTest);
-//     if (m == NULL) {
-//         return;
-//     }
-// }
-
-
 #if PY_MAJOR_VERSION >= 3
 
 // define structure for module
