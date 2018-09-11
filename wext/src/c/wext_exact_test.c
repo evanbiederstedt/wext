@@ -226,6 +226,9 @@ static PyMethodDef weightedEnrichmentMethods[] = {
 //     }
 // }
 
+
+#if PY_MAJOR_VERSION >= 3
+
 // define module structure
 
 static struct PyModuleDef wext_exact_test = {
@@ -244,3 +247,14 @@ PyMODINIT_FUNC PyInit_wext_exact_test(void)
     return PyModule_Create(&wext_exact_test);
 }
 
+#else
+
+PyMODINIT_FUNC initwext_exact_test(void) {
+    PyObject *m = Py_InitModule("wext_exact_test", weightedEnrichmentMethods);
+    if (m == NULL) {
+        return;
+    }
+}
+
+
+#endif

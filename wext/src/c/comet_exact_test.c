@@ -324,11 +324,15 @@ static PyObject *py_comet_exact_test(PyObject *self, PyObject *args){
 
 // try renaming this to 'comet_exact_tests'
 
+
+
 // Register the functions we want to be accessible from Python
 static PyMethodDef cometExactTest[] = {
     {"comet_exact_test", py_comet_exact_test, METH_VARARGS, "CoMEt exact test"}, 
     {NULL, NULL, 0, NULL}
 };
+
+
 
 // PYTHON 2
 // Note that the suffix of init has to match the name of the module,
@@ -340,6 +344,9 @@ static PyMethodDef cometExactTest[] = {
 //     }
 // }
 
+
+#if PY_MAJOR_VERSION >= 3
+
 // define structure for module
 static struct PyModuleDef comet_exact_tests = {
   PyModuleDef_HEAD_INIT,   // required
@@ -349,7 +356,6 @@ static struct PyModuleDef comet_exact_tests = {
   cometExactTest            // method definitions
 };
 
-
 // finally, write the initalizer function
 
 PyMODINIT_FUNC PyInit_comet_exact_tests(void)  
@@ -357,5 +363,15 @@ PyMODINIT_FUNC PyInit_comet_exact_tests(void)
     return PyModule_Create(&comet_exact_tests);
 }
 
+#else
+
+PyMODINIT_FUNC initcomet_exact_test(void) {
+    PyObject *m = Py_InitModule("comet_exact_test", cometExactTest);
+        if (m == NULL) {
+            return;
+    }
+}
+
+#endif
 
 

@@ -93,6 +93,8 @@ static PyMethodDef poibinMethods[] = {
 
 // define the module structure
 
+#if PY_MAJOR_VERSION >= 3
+
 static struct PyModuleDef cpoibin = {
   PyModuleDef_HEAD_INIT,   // required
   "cpoibin",           // name of module
@@ -108,4 +110,13 @@ PyMODINIT_FUNC PyInit_cpoibin(void)
     return PyModule_Create(&cpoibin);
 }
 
+#else
 
+PyMODINIT_FUNC initcpoibin(void) {
+    PyObject *m = Py_InitModule("cpoibin", poibinMethods);
+    if (m == NULL) {
+        return;
+    }
+}
+
+#endif
