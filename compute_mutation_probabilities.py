@@ -9,6 +9,7 @@ from collections import defaultdict
 this_dir = os.path.dirname(os.path.realpath(__file__))
 sys.path.append(this_dir)
 from wext import *
+from past.builtins import xrange
 
 # Argument parser
 def get_parser():
@@ -108,7 +109,7 @@ def run( args ):
     max_tries = 10**9
     if args.seed is not None:
         random.seed(args.seed)
-    seeds = random.sample(list(range(1, 2*10**9)), args.num_permutations)
+    seeds = random.sample(xrange(1, 2*10**9), args.num_permutations)
 
     # Run the bipartite edge swaps in parallel if more than one core indicated
     num_cores = min(args.num_cores if args.num_cores != -1 else mp.cpu_count(), args.num_permutations)
@@ -156,12 +157,12 @@ def run( args ):
         P = postprocess_weight_matrix(P, r, s)
 
         # Verify the weights again
-        for g, obs in list(geneToObserved.items()):
+        for g, obs in geneToObserved.items():
             assert( np.abs(P[geneToIndex[g]-1].sum() - obs) < tol)
 
-        for p, obs in list(patientToObserved.items()):
+        for p, obs in patientToObserved.items():
             assert( np.abs(P[:, patientToIndex[p]-1].sum() - obs) < tol)
-
+ 
         # Add pseudocounts to entries with no mutations observed; unlikely or impossible after post-processing step
         P[P == 0] = 1./(2. * args.num_permutations)
 

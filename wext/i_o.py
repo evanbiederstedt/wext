@@ -11,13 +11,13 @@ def load_mutation_data( mutation_file, min_freq=1 ):
         obj         = json.load(IN)
         all_genes   = obj['genes']
         patients    = obj['patients']
-        geneToCases = dict( (g, set(cases)) for g, cases in list(obj['geneToCases'].items()) )
-        patientToMutations = dict( (p, set(muts)) for p, muts in list(obj['patientToMutations'].items()) )
+        geneToCases = dict( (g, set(cases)) for g, cases in obj['geneToCases'].items() )
+        patientToMutations = dict( (p, set(muts)) for p, muts in obj['patientToMutations'].items() )
         hypermutators = set(obj['hypermutators'])
         params      = obj['params']
 
     # Restrict the genes based on the minimum frequency
-    genes = set( g for g, cases in list(geneToCases.items()) if len(cases) >= min_freq )
+    genes = set( g for g, cases in geneToCases.items() if len(cases) >= min_freq )
 
     return genes, all_genes, patients, geneToCases, patientToMutations, params, hypermutators
 
@@ -34,11 +34,11 @@ def load_patient_annotation_file(patient_annotation_file):
 # Converts keys from an iterable to tab-separated, so the dictionary can be
 # output as JSON
 def convert_dict_for_json( setToVal, sep='\t' ):
-    return dict( (sep.join(sorted(M)), val) for M, val in list(setToVal.items()) )
+    return dict( (sep.join(sorted(M)), val) for M, val in setToVal.items() ) 
 
 # Converts tab-separated keys back to frozensets
 def convert_dict_from_json( setToVal, sep='\t', iterable=frozenset ):
-    return dict( (iterable(M.split(sep)), val) for M, val in list(setToVal.items()) )
+    return dict( (iterable(M.split(sep)), val) for M, val in setToVal.items() )
 
 # Create the header strings for a contingency table
 def create_tbl_header( k ):
@@ -54,7 +54,7 @@ def output_enumeration_table(args, k, setToPval, setToRuntime, setToFDR, setToOb
         if not args.json_format:
             # Construct the rows
             rows = []
-            for M, pval in list(setToPval.items()):
+            for M, pval in setToPval.items():
                 if setToFDR[M]<=fdr_threshold:
                     X, T, Z, tbl = setToObs[M]
                     row = [ ', '.join(sorted(M)), pval, setToFDR[M], setToRuntime[M], T, Z ] + tbl
@@ -90,14 +90,14 @@ def output_mcmc(args, setsToFreq, setToPval, setToObs):
         params = vars(args)
         output = dict(params=params, setToPval=convert_dict_for_json(setToPval),
                       setToObs=convert_dict_for_json(setToObs),
-                      setsToFreq=dict( (' '.join([ ','.join(sorted(M)) for M in sets ]), freq) for sets, freq in list(setsToFreq.items()) ))
+                      setsToFreq=dict( (' '.join([ ','.join(sorted(M)) for M in sets ]), freq) for sets, freq in setsToFreq.items()) )
         with open(args.output_prefix + '.json', 'w') as OUT:
             json.dump( output, OUT )
     else:
         # Output a gene set file
         with open(args.output_prefix + '-sampled-collections.tsv', 'w') as OUT:
             rows = []
-            for sets, freq in list(setsToFreq.items()):
+            for sets, freq in setsToFreq.items():
                 row = [ ' '.join([ ','.join(M) for M in sets ]), freq ]
                 row.append( sum( -np.log10(setToPval[M] ** args.alpha) for M in sets ))
                 rows.append(row)
@@ -109,7 +109,7 @@ def output_mcmc(args, setsToFreq, setToPval, setToObs):
         # Output each of the sample gene sets
         with open(args.output_prefix + '-sampled-sets.tsv', 'w') as OUT:
             rows = []
-            for M, pval in list(setToPval.items()):
+            for M, pval in setToPval.items():
                 X, T, Z, tbl = setToObs[M]
                 rows.append([ ','.join(sorted(M)), pval, T, Z] + tbl )
             rows.sort(key=lambda r: r[1])

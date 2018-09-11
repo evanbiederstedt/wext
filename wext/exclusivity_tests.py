@@ -22,7 +22,7 @@ def wre_test(t, x, p, method=EXACT, verbose=0):
     # Check that the probabilities are in (0, 1].
     assert(all(0<b<= 1 for a in p for b in a))
     # Check that the number of mutations in each gene is not greater than the number of samples.
-    assert(all(a<=len(b) for a, b in list(zip(x, p))))
+    assert(all(a<=len(b) for a, b in zip(x, p)))
     # Check that the number of mutually exclusive mutations is not greater than the total number of mutations.
     assert(t<=sum(x))
     #Check that we've implemented the given set size with the exact test

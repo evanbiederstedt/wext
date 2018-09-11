@@ -19,8 +19,10 @@ def exact_test_k3(t, x, p, verbose):
     return wext_exact_test.triple_exact_test( N, t, x[0], x[1], x[2], p )
 
 # Wrapper for k=2 exact test C function
-def exact_test_k2(t, x, y, p_x, p_y, verbose):
+def exact_test_k2(t, xy, pxpy, verbose):
 	# Two-sided test
+    (x, y) = xy
+    (p_x, p_y) = pxpy
     N = len(p_x)
     z = (x + y - t)/2 # count number of co-occurrences
     tail_masses = wext_exact_test.conditional(N, list(range(z+1)), x, y, p_x, p_y)

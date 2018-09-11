@@ -46,10 +46,11 @@ def mcmc(ks, geneToCases, num_patients, method, test, geneToP, seed, annotations
         return sum( _weight(M) for M in collection )
 
     def _to_collection(solution):
-        return frozenset( frozenset(M) for M in list(solution.values()) )
+        return frozenset( frozenset(M) for M in solution.values() ) 
 
     # Compute the acceptance ratio
-    def _log_accept_ratio( W_current, W_next ): return W_next - W_current
+    def _log_accept_ratio( W_current, W_next ): 
+        return W_next - W_current
 
     # Set up PRNG, sample space, and output
     random_seed(seed)
@@ -88,7 +89,7 @@ def mcmc(ks, geneToCases, num_patients, method, test, geneToP, seed, annotations
                 # if we only have one set, we can't swap between sets
                 if t == 1: continue
                 i = next_assigned[next_gene]
-                swap_gene = choice([ g for g in list(next_assigned.keys()) if g not in next_soln[i] ])
+                swap_gene = choice([ g for g in next_assigned.keys() if g not in next_soln[i] ])
                 j = next_assigned[swap_gene]
                 next_assigned[swap_gene] = i
                 next_soln[i].add(swap_gene)
@@ -129,7 +130,7 @@ def mcmc(ks, geneToCases, num_patients, method, test, geneToP, seed, annotations
     # Merge the various chains
     setsToTotalFreq = defaultdict(int)
     for counter in setsToFreq:
-        for sets, freq in list(counter.items()):
+        for sets, freq in counter.items():
             setsToTotalFreq[sets] += freq
 
     return setsToTotalFreq, setToPval, setToObs
