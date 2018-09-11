@@ -365,8 +365,8 @@ PyMODINIT_FUNC PyInit_comet_exact_tests(void)
 
 #else
 
-PyMODINIT_FUNC initcomet_exact_test(void) {
-    PyObject *m = Py_InitModule("comet_exact_test", cometExactTest);
+PyMODINIT_FUNC initcomet_exact_tests(void) {
+    PyObject *m = Py_InitModule("comet_exact_tests", cometExactTest);
         if (m == NULL) {
             return;
     }
