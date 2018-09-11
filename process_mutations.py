@@ -161,12 +161,12 @@ def run( args ):
 
     # Summarize the data
     if args.verbose > 0:
-        print('* Summary of mutation data...')
-        print('\tGenes: {}'.format(num_genes))
-        print('\tPatients: {} ({} hypermutators)'.format(num_patients, len(hypermutators)))
-        print('\tUsed variant classes:', ', '.join(sorted(vc)))
-        print('\tUsed variant types:', ', '.join(sorted(vt)))
-        print('\tUsed validation statuses:', ', '.join(sorted(vs)))
+        print("* Summary of mutation data...")
+        print("\tGenes: {}".format(num_genes))
+        print("\tPatients: {} ({} hypermutators)".format(num_patients, len(hypermutators)))
+        print("\tUsed variant classes: " + ", ".join(sorted(vc)))
+        print("\tUsed variant types: " + ", ".join(sorted(vt)))
+        print("\tUsed validation statuses: " + ", ".join(sorted(vs)))
 
     # Output to file
     with open(args.output_file, 'w') as OUT:

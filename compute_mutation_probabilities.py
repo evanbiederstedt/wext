@@ -4,6 +4,7 @@
 import sys, os, argparse, json, numpy as np, multiprocessing as mp, random
 from collections import defaultdict
 
+
 # Load the weighted exclusivity test
 this_dir = os.path.dirname(os.path.realpath(__file__))
 sys.path.append(this_dir)
@@ -44,7 +45,7 @@ def permute_matrices(edge_list, max_swaps, max_tries, seeds, verbose, m, n, num_
             indices.append( (edge[0]-1, edge[1]-1) )
 
         # Record the permutation
-        observed[list(zip(*indices))] += 1.
+        observed[tuple(zip(*indices))] += 1.
         geneToCases = dict( (g, list(cases)) for g, cases in iter(list(geneToCases.items())) )
         permutations.append( dict(geneToCases=geneToCases, permutation_number=seed) )
 
