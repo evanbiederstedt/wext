@@ -178,9 +178,9 @@ def run( args ):
                       patient_whitelist_file=os.path.abspath(args.patient_whitelist) if args.patient_whitelist else None,
                       hypermutators_file=os.path.abspath(args.hypermutators_file) if args.hypermutators_file else None)
         output = dict(params=params, patients=patients, genes=genes, hypermutators=list(hypermutators),
-                      geneToCases=dict( (g, list(cases)) for g, cases in list(geneToCases.items())),
+                      geneToCases=dict( (g, list(cases)) for g, cases in geneToCases.items()),
                       patientToType=patientToType,
-                      patientToMutations=dict( (p, list(muts)) for p, muts in list(patientToMutations.items())),
+                      patientToMutations=dict( (p, list(muts)) for p, muts in patientToMutations.items()),
                       num_genes=num_genes, num_patients=num_patients)
         json.dump( output, OUT )
 
