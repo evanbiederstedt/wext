@@ -24,7 +24,7 @@ def get_parser():
 
 def process_maf( maf_file, patientWhitelist, geneToCases, patientToMutations, vc, vt, vs, ivc, ivt, ivs, verbose ):
     if verbose > 1: 
-        print('\tLoading MAF:', maf_file)
+        print('\tLoading MAF: ', maf_file)
     genes, patients = set(), set()
     with open(maf_file, 'r') as IN:
         seenHeader = False
@@ -32,7 +32,7 @@ def process_maf( maf_file, patientWhitelist, geneToCases, patientToMutations, vc
             arr = l.rstrip('\n').split('\t')
             # Parse the header if we haven't seen it yet
             if not seenHeader and arr[0].lower() == 'hugo_symbol':
-                arr              = list(map(str.lower, arr))
+                arr              = map(str.lower, arr)
                 seenHeader       = True
                 gene_index       = 0
                 patient_index    = arr.index('tumor_sample_barcode')
@@ -86,7 +86,7 @@ def process_maf( maf_file, patientWhitelist, geneToCases, patientToMutations, vc
 
 def process_events_file( events_file, patientWhitelist, geneToCases, patientToMutations, verbose ):
     if verbose > 1: 
-        print('\tProcessing events file:', events_file)
+        print('\tProcessing events file: ', events_file)
 
     # Parse the events file
     events, patients = set(), set()
