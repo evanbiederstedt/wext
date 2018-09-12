@@ -25,19 +25,23 @@ from find_exclusive_sets import get_permuted_files
 from wext import rce_permutation_test, load_mutation_data, output_enumeration_table
 
 # Load the mutation data
-if args.verbose > 0: print '* Loading mutation data..'
+if args.verbose > 0: 
+	print('* Loading mutation data..')
 mutation_data = load_mutation_data( args.mutation_file, args.min_freq )
 genes, all_genes, patients, geneToCases, _, params, _ = mutation_data
 num_patients = len(patients)
 sets = list( frozenset(t) for t in combinations(genes, args.gene_set_size) )
 
-if args.verbose > 0: print '\t- Testing {} sets of size k={}'.format(len(sets), args.gene_set_size)
+if args.verbose > 0: 
+	print('\t- Testing {} sets of size k={}'.format(len(sets), args.gene_set_size))
 
 # Run the permutational test
-if args.verbose > 0: print '* Running permutation test...'
+if args.verbose > 0: 
+	print('* Running permutation test...')
 start_index = (args.job_id-1) * args.batch_size
 permuted_files = get_permuted_files([args.input_directory], args.num_permutations)[start_index:start_index + args.batch_size]
-if args.verbose > 0: print '\t- Testing {} files'.format(len(permuted_files))
+if args.verbose > 0: 
+	print('\t- Testing {} files'.format(len(permuted_files)))
     
 setToPval, setToRuntime, setToFDR, setToObs = rce_permutation_test( sets, geneToCases, num_patients, permuted_files, 1, 0 )
 
