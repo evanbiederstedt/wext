@@ -16,7 +16,7 @@ parser.add_argument('-np', '--num_permutations', type=int, required=True)
 parser.add_argument('-o', '--output_prefix', type=str, required=True)
 parser.add_argument('-w', '--wext_directory', type=str, required=True)
 parser.add_argument('-j', '--job_id', type=int, required=job_id is None, default=job_id)
-parser.add_argument('-v', '--verbose', type=int, required=False, default=0, choices=range(5))
+parser.add_argument('-v', '--verbose', type=int, required=False, default=0, choices=list(range(5)))
 args = parser.parse_args( sys.argv[1:] )
 
 # Load weighted exclusivity test

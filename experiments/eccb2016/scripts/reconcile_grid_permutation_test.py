@@ -19,6 +19,7 @@ from wext import *
 
 # Load and merge the JSON files
 def load_json_files(( json_files )):
+    
     setToCount       = defaultdict( int )
     setToRuntime     = defaultdict( float )
     setToObs         = dict()
@@ -27,7 +28,7 @@ def load_json_files(( json_files )):
         # Parse the JSON file
         with open(json_file, 'r') as IN:
             obj = json.load(IN)
-            for M, pval in obj['setToPval'].iteritems():
+            for M, pval in obj['setToPval'].items():
                 frozen_M = frozenset(M.split('\t'))
                 setToCount[frozen_M]   += int(round(pval * args.batch_size))
                 setToRuntime[frozen_M] += obj['setToRuntime'][M]
