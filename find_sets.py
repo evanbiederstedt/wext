@@ -24,7 +24,7 @@ def get_parser():
     parser.add_argument('-t', '--test', type=str, required=False, default='WRE', choices=['WRE'])
     parser.add_argument('-m', '--method', type=str, required=False, default='Saddlepoint', choices=['Saddlepoint'])
     parser.add_argument('-s', '--statistic', type=str, required=True, choices=['exclusivity', 'any-co-occurrence', 'all-co-occurrence'])
-    parser.add_argument('-v', '--verbose', type=int, required=False, default=1, choices=range(5))
+    parser.add_argument('-v', '--verbose', type=int, required=False, default=1, choices=list(range(5)) )
     parser.add_argument('-r', '--report_invalids', action='store_true', default=False, required=False)
     parser.add_argument('--json_format', action='store_true', default=False, required=False)
     return parser
@@ -87,12 +87,12 @@ def load_mutation_files(mutation_files):
         genes    |= set(type_genes)
 
         # Record the mutations in each gene
-        for g, cases in list(typeGeneToCases.items()): 
+        for g, cases in typeGeneToCases.items(): 
             geneToCases[g] |= cases
 
         # Record the genes, patients, and their indices for later
-        typeToGeneIndex.append(dict(zip(type_genes, range(len(type_genes)))))
-        typeToPatientIndex.append(dict(zip(type_patients, range(len(type_patients)))))
+        typeToGeneIndex.append(dict(zip(type_genes, list(range(len(type_genes))))))
+        typeToPatientIndex.append(dict(zip(type_patients, list(range(len(type_patients))))))
 
     return genes, patients, geneToCases, typeToGeneIndex, typeToPatientIndex
 
@@ -107,7 +107,7 @@ def run( args ):
     num_all_genes, num_patients = len(genes), len(patients)
 
     # Restrict to genes mutated in a minimum number of samples
-    geneToCases = dict( (g, cases) for g, cases in list(geneToCases.items()) if g in genes and len(cases) >= args.min_frequency )
+    geneToCases = dict( (g, cases) for g, cases in geneToCases.items() if g in genes and len(cases) >= args.min_frequency )
     genes     = set(geneToCases.keys())
     num_genes = len(genes)
 
@@ -120,7 +120,7 @@ def run( args ):
         # Since we are looking for co-occurrence between exclusive sets with
         # an annotation A, we add events for each patient NOT annotated by
         # the given annotation
-        for annotation, cases in list(annotationToPatients.items()):
+        for annotation, cases in annotationToPatients.items():
             not_cases = patients - cases
             if len(not_cases) > 0:
                 geneToCases[annotation] = not_cases
@@ -137,8 +137,8 @@ def run( args ):
     # Load the weights (if necessary)
 
     # Create master versions of the indices
-    masterGeneToIndex    = dict(list(zip(sorted(genes), list(range(num_genes)))))
-    masterPatientToIndex = dict(list(zip(sorted(patients), list(range(num_patients)))))
+    masterGeneToIndex    = dict(zip(sorted(genes), list(range(num_genes))))
+    masterPatientToIndex = dict(zip(sorted(patients), list(range(num_patients))))
     geneToP = load_weight_files(args.weights_files, genes, patients, typeToGeneIndex, typeToPatientIndex, masterGeneToIndex, masterPatientToIndex)
 
     if args.verbose > 0: 

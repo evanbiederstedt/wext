@@ -4,10 +4,12 @@
 import sys, os, argparse, json, numpy as np, multiprocessing as mp, random
 from collections import defaultdict
 
+
 # Load the weighted exclusivity test
 this_dir = os.path.dirname(os.path.realpath(__file__))
 sys.path.append(this_dir)
 from wext import *
+from past.builtins import xrange
 
 # Argument parser
 def get_parser():
@@ -44,7 +46,7 @@ def permute_matrices(edge_list, max_swaps, max_tries, seeds, verbose, m, n, num_
             indices.append( (edge[0]-1, edge[1]-1) )
 
         # Record the permutation
-        observed[list(zip(*indices))] += 1.
+        observed[tuple(zip(*indices))] += 1.
         geneToCases = dict( (g, list(cases)) for g, cases in iter(list(geneToCases.items())) )
         permutations.append( dict(geneToCases=geneToCases, permutation_number=seed) )
 
@@ -107,7 +109,7 @@ def run( args ):
     max_tries = 10**9
     if args.seed is not None:
         random.seed(args.seed)
-    seeds = random.sample(list(range(1, 2*10**9)), args.num_permutations)
+    seeds = random.sample(xrange(1, 2*10**9), args.num_permutations)
 
     # Run the bipartite edge swaps in parallel if more than one core indicated
     num_cores = min(args.num_cores if args.num_cores != -1 else mp.cpu_count(), args.num_permutations)
@@ -155,12 +157,12 @@ def run( args ):
         P = postprocess_weight_matrix(P, r, s)
 
         # Verify the weights again
-        for g, obs in list(geneToObserved.items()):
+        for g, obs in geneToObserved.items():
             assert( np.abs(P[geneToIndex[g]-1].sum() - obs) < tol)
 
-        for p, obs in list(patientToObserved.items()):
+        for p, obs in patientToObserved.items():
             assert( np.abs(P[:, patientToIndex[p]-1].sum() - obs) < tol)
-
+ 
         # Add pseudocounts to entries with no mutations observed; unlikely or impossible after post-processing step
         P[P == 0] = 1./(2. * args.num_permutations)
 

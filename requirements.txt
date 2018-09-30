@@ -1,3 +1,4 @@
 numpy >=1.11.0
 scipy >=0.17.0
 networkx >= 1.11
+future >= 0.16.0

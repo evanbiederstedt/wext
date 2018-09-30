@@ -8,4 +8,4 @@
 // Function declarations
 double pmf_recursion(int k, int j, double *ps, double **cache);
 double pmf(int k, int N, double *ps);
-PyObject *py_pmf(PyObject *self, PyObject *args);
+static PyObject *py_pmf(PyObject *self, PyObject *args);

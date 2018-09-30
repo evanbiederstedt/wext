@@ -23,7 +23,7 @@ with open(args.mutation_file, 'r') as IN:
 # Remove genes without a length
 original_genes  = set(obj['genes'])
 remaining_genes = original_genes & set(geneToLength.keys())
-obj['geneToCases'] = dict( (g, cases) for g, cases in obj['geneToCases'].iteritems() if g in geneToLength )
+obj['geneToCases'] = dict( (g, cases) for g, cases in obj['geneToCases'].items() if g in geneToLength )
 obj['genes'] = sorted(obj['geneToCases'].keys())
 obj['num_genes'] = len(obj['genes'])
 obj['params']['lengths_file'] = os.path.abspath(args.lengths_file)

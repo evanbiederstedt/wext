@@ -281,12 +281,15 @@ struct Pvalues comet_exact_test(int k, int N, int *ctbl, double pvalthresh){
 
 }
 
+
+
+
 ////////////////////////////////////////////////////////////////////////////////
-// Python registration
+// Python wrapper functions
 ////////////////////////////////////////////////////////////////////////////////
 
 // The CoMEt exact test, callable from Python
-PyObject *py_comet_exact_test(PyObject *self, PyObject *args){
+static PyObject *py_comet_exact_test(PyObject *self, PyObject *args){
   // Parameters
   int k, N; // k: gene set size; N: number of samples
   PyObject *py_tbl; // FLAT Python contingency table
@@ -307,7 +310,7 @@ PyObject *py_comet_exact_test(PyObject *self, PyObject *args){
     tbl[i] = (int) PyLong_AsLong (PyList_GetItem(py_tbl, i));
 
   // Compute the P-values
-  pval   = comet_exact_test(k, N, tbl, pvalthresh);
+  pval = comet_exact_test(k, N, tbl, pvalthresh);
 
   // Free memory 
   free(tbl);
@@ -316,17 +319,48 @@ PyObject *py_comet_exact_test(PyObject *self, PyObject *args){
 
 }
 
+// methods definition: cometExactTest
+// name of module: comet_exact_test ... which is also the name of the function in Python
+
+// try renaming this to 'comet_exact_tests'
+
+
 
 // Register the functions we want to be accessible from Python
-PyMethodDef cometExactTest[] = {
-    {"comet_exact_test", py_comet_exact_test, METH_VARARGS, "CoMEt exact test"}
+static PyMethodDef cometExactTest[] = {
+    {"comet_exact_test", py_comet_exact_test, METH_VARARGS, "CoMEt exact test"}, 
+    {NULL, NULL, 0, NULL}
 };
 
-// Note that the suffix of init has to match the name of the module,
-// both here and in the setup.py file
-PyMODINIT_FUNC initcomet_exact_test(void) {
-    PyObject *m = Py_InitModule("comet_exact_test", cometExactTest);
-    if (m == NULL) {
-        return;
+
+
+#if PY_MAJOR_VERSION >= 3
+
+// define structure for module
+static struct PyModuleDef comet_exact_tests = {
+  PyModuleDef_HEAD_INIT,   // required
+  "comet_exact_tests",           // name of module
+  "documentation detailed here",   // documentation
+  -1,
+  cometExactTest            // method definitions
+};
+
+// finally, write the initalizer function
+
+PyMODINIT_FUNC PyInit_comet_exact_tests(void)  
+{
+    return PyModule_Create(&comet_exact_tests);
+}
+
+#else
+
+PyMODINIT_FUNC initcomet_exact_tests(void) {
+    PyObject *m = Py_InitModule("comet_exact_tests", cometExactTest);
+        if (m == NULL) {
+            return;
     }
 }
+
+#endif
+
+
