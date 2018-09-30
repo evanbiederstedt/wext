@@ -37,7 +37,7 @@ for cancer, mutation_file, weights_file in zip(args.cancers, args.mutation_files
 # Set up the figure
 fig, axes = plt.subplots( 1, len(args.cancers))
 fig.set_size_inches( len(args.cancers) * 5, 5)
-min_weight = min([ np.min(W) for W in list(cancerToWeights.values()) ])
+min_weight = min([ np.min(W) for W in cancerToWeights.values() ])
 print('Min weight:', min_weight)
 
 for ax, cancer in zip(axes, args.cancers):

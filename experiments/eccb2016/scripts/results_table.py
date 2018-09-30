@@ -39,14 +39,14 @@ with open(args.mutation_file, 'r') as IN:
 # Load the triples
 with open(args.unweighted_exact_file, 'r') as IN:
     obj            = json.load(IN)
-    unweightedPval = dict((frozenset(t.split('\t')), pval) for t, pval in list(obj['setToPval'].items()))
-    assert( all( not(isnan(pval)) for pval in list(unweightedPval.values()) ))
-    unweightedFDR  = dict((frozenset(t.split('\t')), fdr) for t, fdr in list(obj['setToFDR'].items()))
+    unweightedPval = dict((frozenset(t.split('\t')), pval) for t, pval in obj['setToPval'].items())
+    assert( all( not(isnan(pval)) for pval in unweightedPval.values() ))
+    unweightedFDR  = dict((frozenset(t.split('\t')), fdr) for t, fdr in obj['setToFDR'].items())
 
 with open(args.weighted_saddlepoint_file, 'r') as IN:
     obj          = json.load(IN)
     weightedPval = dict((frozenset(t.split('\t')), pval) for t, pval in obj['setToPval'].items())
-    assert( all( not(isnan(pval)) for pval in list(weightedPval.values()) ))
+    assert( all( not(isnan(pval)) for pval in weightedPval.values() ))
     weightedFDR  = dict((frozenset(t.split('\t')), fdr) for t, fdr in obj['setToFDR'].items())
 
 print('Triples with weighted FDR < {}: {}/{}'.format(args.fdr_cutoff, sum(1 for t, fdr in weightedFDR.items() if fdr < args.fdr_cutoff), len(weightedFDR)))
