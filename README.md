@@ -1,18 +1,11 @@
 # Weighted Exclusivity Test (WExT) #
 
+[![Build Status](https://api.travis-ci.org/raphael-group/wext.svg?branch=master)](https://travis-ci.org/raphael-group/wext?branch=master)
+
+
 The Weighted Exclusivity Test (WExT) was developed by the [Raphael research group](http://compbio.cs.brown.edu/) at Brown University.
 
 ### Requirements ###
-
-Latest tested version in parentheses.
-
-1. Python (2.7.9)
-
-    a. NumPy (1.11.0)
-
-    b. SciPy (0.17.0)
-
-2. gcc (4.9.2)
 
 We recommend using [`virtualenv`](https://virtualenv.pypa.io/en/latest/) to install the Python requirements. After installing `virtualenv`, you can install the Python requirements for the weighted exclusivity test as follows:
 
@@ -27,8 +20,7 @@ See the wiki for additional instructions on [Setup and installation](https://git
 The C and Fortran extensions must be compiled before running the weighted exclusivity test:
 
     cd wext
-    python setup.py build
-    f2py -c src/fortran/bipartite_edge_swap_module.f95 -m bipartite_edge_swap_module
+    python setup.py install
 
 ### Usage ###
 
