@@ -28,7 +28,7 @@ for cancer, mutation_file, weights_file in zip(args.cancers, args.mutation_files
         cancerToHypermutators[cancer] = set(obj['hypermutators'])
         geneToCases[cancer] = obj['geneToCases']
         patientToMutations[cancer] = dict( (p, set()) for p in obj['patients'] )
-        for g, cases in list(geneToCases[cancer].items()):
+        for g, cases in (geneToCases[cancer].items():
             for p in cases:
                 patientToMutations[cancer][p].add( g )
     cancerToWeights[cancer] = np.load(weights_file)

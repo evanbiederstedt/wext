@@ -60,15 +60,15 @@ def run( args ):
             new_sets |= set(sorted( list(setToPval[run_name].keys()), key=lambda M: setToPval[run_name][M] )[:args.num_sets])
 
         sets = new_sets
-        setToPval = dict( (run_name, dict( (M, pval) for M, pval in iter(list(setToPval[run_name].items())) if M in new_sets)) for run_name in methods )
-        setToRuntime = dict( (run_name, dict( (M, pval) for M, pval in iter(list(setToRuntime[run_name].items())) if M in new_sets)) for run_name in methods )
-        setToObs = dict( (run_name, dict( (M, pval) for M, pval in iter(list(setToObs[run_name].items())) if M in new_sets)) for run_name in methods )
-        setToFDR = dict( (run_name, dict( (M, pval) for M, pval in iter(list(setToFDR[run_name].items())) if M in new_sets)) for run_name in methods )
+        setToPval = dict( (run_name, dict( (M, pval) for M, pval in setToPval[run_name].items() if M in new_sets)) for run_name in methods )
+        setToRuntime = dict( (run_name, dict( (M, pval) for M, pval in setToRuntime[run_name].items() if M in new_sets)) for run_name in methods )
+        setToObs = dict( (run_name, dict( (M, pval) for M, pval in setToObs[run_name].items() if M in new_sets)) for run_name in methods )
+        setToFDR = dict( (run_name, dict( (M, pval) for M, pval in setToFDR[run_name].items() if M in new_sets)) for run_name in methods )
 
     # Restrict the weights
     genes_in_sets = set( g for M in sets for g in M.split('\t') )
     P = dict( (g, P[g]) for g in genes_in_sets )
-    geneToCases = dict( (g, cases) for g, cases in iter(list(geneToCases.items())) if g in genes_in_sets )
+    geneToCases = dict( (g, cases) for g, cases in geneToCases.items() if g in genes_in_sets )
 
     print('* Considering {} sets...'.format(len(new_sets)))
 

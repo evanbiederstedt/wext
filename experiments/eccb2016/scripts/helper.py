@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import numpy as np
+from past.builtins import xrange
 
 # Add a y=x line to the given matplotlib axis
 def add_y_equals_x(ax, c='k', line_style='--', alpha=0.75):
@@ -31,14 +32,14 @@ def aligned_plaintext_table(table, sep='\t', spaces=2):
 
     # Find numbers of rows and columns.
     m = len(rows)
-    lengths = list(map(len, rows))
+    lengths = map(len, rows)
     n = max(lengths)
 
     # Pad rows with a deficient number of columns.
     entries = [[rows[i][j] if j<lengths[i] else '' for j in range(n)] for i in range(m)]
 
     # Find column widths.
-    sizes = [max(len(entries[i][j]) for i in list(range(m))) for j in range(n)]
+    sizes = [max(len(entries[i][j]) for i in range(m)) for j in range(n)]
 
     # Return results.
     return '\n'.join([''.join([entries[i][j].rjust(sizes[j]+spaces) for j in range(n)]).rstrip() for i in range(m)])
@@ -83,14 +84,14 @@ def rank(a, reverse=False, ties=2):
     elif ties==1 :
         z = np.zeros(n, dtype=y.dtype)
         j = 0
-        for i in range(1, n):
+        for i in xrange(1, n):
             if x[y[i]]!=x[y[i-1]]:
                 j += 1
             z[y[i]] = j
     elif ties==2:
         z = np.zeros(n, dtype=y.dtype)
         j = 0
-        for i in range(1, n):
+        for i in xrange(1, n):
             if x[y[i]]!=x[y[i-1]]:
                 j = i
             z[y[i]] = j

@@ -4,6 +4,7 @@ import sys, os, numpy as np
 from collections import defaultdict
 from time import time
 from random import random, sample, choice, seed as random_seed
+from past.builtins import xrange
 
 from .constants import *
 from .enumerate_sets import observed_values
@@ -56,9 +57,9 @@ def mcmc(ks, geneToCases, num_patients, method, test, geneToP, seed, annotations
     random_seed(seed)
     t          = len(ks)
     genespace  = list(geneToCases.keys())
-    setsToFreq = [ defaultdict(int) for _ in range(nchains) ]
+    setsToFreq = [ defaultdict(int) for _ in xrange(nchains) ]
     setToPval, setToObs =  dict(), dict()
-    for c in range(nchains):
+    for c in xrange(nchains):
         if verbose > 0: 
             print('- Experiment', c+1)
 
@@ -78,7 +79,7 @@ def mcmc(ks, geneToCases, num_patients, method, test, geneToP, seed, annotations
                 sys.stdout.flush()
 
             # Sample the next gene to swap in/around the set
-            next_soln = dict( (index, set(M)) for index, M in list(soln.items()) )
+            next_soln = dict( (index, set(M)) for index, M in soln.items() )
             next_assigned = dict(list(assigned.items()))
             next_gene = choice(genespace)
 
