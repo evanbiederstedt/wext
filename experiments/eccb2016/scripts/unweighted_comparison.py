@@ -27,7 +27,7 @@ for cancer, exact_file in zip(args.cancers, args.exact_files):
         exactPval[cancer] = obj['setToPval']
         exactRuntime[cancer] = obj['setToRuntime']
 
-num_exact = sum(1 for c in args.cancers for M in list(exactPval[c].keys()))
+num_exact = sum(1 for c in args.cancers for M in exactPval[c].keys())
 
 for cancer, saddlepoint_file in zip(args.cancers, args.saddlepoint_files):
     with open(saddlepoint_file, 'r') as IN:
@@ -35,7 +35,7 @@ for cancer, saddlepoint_file in zip(args.cancers, args.saddlepoint_files):
         saddlepointPval[cancer] = obj['setToPval']
         saddlepointRuntime[cancer] = obj['setToRuntime']
 
-num_saddlepoint = sum(1 for c in args.cancers for M in list(saddlepointPval[c].keys()))
+num_saddlepoint = sum(1 for c in args.cancers for M in saddlepointPval[c].keys())
 print('* Loaded {} exact sets and {} saddlepoint sets...'.format(num_exact, num_saddlepoint))
 
 # Construct the arrays of data

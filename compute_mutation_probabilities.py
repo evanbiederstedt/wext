@@ -47,7 +47,7 @@ def permute_matrices(edge_list, max_swaps, max_tries, seeds, verbose, m, n, num_
 
         # Record the permutation
         observed[tuple(zip(*indices))] += 1.
-        geneToCases = dict( (g, list(cases)) for g, cases in iter(list(geneToCases.items())) )
+        geneToCases = dict( (g, list(cases)) for g, cases in geneToCases.items())
         permutations.append( dict(geneToCases=geneToCases, permutation_number=seed) )
 
     return observed/float(len(seeds)), permutations
@@ -63,7 +63,7 @@ def postprocess_weight_matrix(P, r, s):
 
     # Average weights over entries of weight matrix with same marginals
     P_mean = np.zeros(np.shape(P))
-    for marginals, indices in list(marginals_to_indices.items()):
+    for marginals, indices in marginals_to_indices.items():
         mean_value = float(sum(P[i, j] for i, j in indices))/float(len(indices))
         for i, j in indices:
             P_mean[i, j] = mean_value
@@ -84,15 +84,15 @@ def run( args ):
     mutation_data = load_mutation_data( args.mutation_file )
     genes, all_genes, patients, geneToCases, patientToMutations, params, hypermutators = mutation_data
 
-    geneToObserved = dict( (g, len(cases)) for g, cases in iter(list(geneToCases.items())) )
-    patientToObserved = dict( (p, len(muts)) for p, muts in iter(list(patientToMutations.items())) )
+    geneToObserved = dict( (g, len(cases)) for g, cases in geneToCases.items()) 
+    patientToObserved = dict( (p, len(muts)) for p, muts in patientToMutations.items()) 
     geneToIndex = dict( (g, i+1) for i, g in enumerate(all_genes) )
     indexToGene = dict( (i+1, g) for i, g in enumerate(all_genes) )
     patientToIndex = dict( (p, j+1) for j, p in enumerate(patients) )
     indexToPatient = dict( (j+1, p) for j, p in enumerate(patients) )
 
     edges = set()
-    for gene, cases in list(geneToCases.items()):
+    for gene, cases in geneToCases.items():
         for patient in cases:
             edges.add( (geneToIndex[gene], patientToIndex[patient]) )
 
@@ -140,10 +140,10 @@ def run( args ):
         P = np.add.reduce(observeds) / float(len(observeds))
 
         # Verify the weights
-        for g, obs in list(geneToObserved.items()):
+        for g, obs in geneToObserved.items():
             assert( np.abs(P[geneToIndex[g]-1].sum() - obs) < tol)
 
-        for p, obs in list(patientToObserved.items()):
+        for p, obs in patientToObserved.items():
             assert( np.abs(P[:, patientToIndex[p]-1].sum() - obs) < tol)
 
         # Construct mutation matrix to compute marginals

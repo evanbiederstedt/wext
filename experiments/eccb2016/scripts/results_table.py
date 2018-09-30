@@ -34,23 +34,23 @@ with open(args.mutation_file, 'r') as IN:
     obj = json.load(IN)
     genes, patients = obj['genes'], obj['patients']
     hypermutators = set(obj['hypermutators'])
-    geneToCases = dict((g, set(cases)) for g, cases in iter(list(obj['geneToCases'].items())))
+    geneToCases = dict((g, set(cases)) for g, cases in obj['geneToCases'].items())
 
 # Load the triples
 with open(args.unweighted_exact_file, 'r') as IN:
     obj            = json.load(IN)
-    unweightedPval = dict((frozenset(t.split('\t')), pval) for t, pval in iter(list(obj['setToPval'].items())))
-    assert( all( not(isnan(pval)) for pval in list(unweightedPval.values()) ))
-    unweightedFDR  = dict((frozenset(t.split('\t')), fdr) for t, fdr in iter(list(obj['setToFDR'].items())))
+    unweightedPval = dict((frozenset(t.split('\t')), pval) for t, pval in obj['setToPval'].items())
+    assert( all( not(isnan(pval)) for pval in unweightedPval.values() ))
+    unweightedFDR  = dict((frozenset(t.split('\t')), fdr) for t, fdr in obj['setToFDR'].items())
 
 with open(args.weighted_saddlepoint_file, 'r') as IN:
     obj          = json.load(IN)
-    weightedPval = dict((frozenset(t.split('\t')), pval) for t, pval in iter(list(obj['setToPval'].items())))
-    assert( all( not(isnan(pval)) for pval in list(weightedPval.values()) ))
-    weightedFDR  = dict((frozenset(t.split('\t')), fdr) for t, fdr in iter(list(obj['setToFDR'].items())))
+    weightedPval = dict((frozenset(t.split('\t')), pval) for t, pval in obj['setToPval'].items())
+    assert( all( not(isnan(pval)) for pval in weightedPval.values() ))
+    weightedFDR  = dict((frozenset(t.split('\t')), fdr) for t, fdr in obj['setToFDR'].items())
 
-print('Triples with weighted FDR < {}: {}/{}'.format(args.fdr_cutoff, sum(1 for t, fdr in weightedFDR.iteritems() if fdr < args.fdr_cutoff), len(weightedFDR)))
-print('Triples with unweighted FDR < {}: {}/{}'.format(args.fdr_cutoff, sum(1 for t, fdr in unweightedFDR.iteritems() if fdr < args.fdr_cutoff), len(unweightedFDR)))
+print('Triples with weighted FDR < {}: {}/{}'.format(args.fdr_cutoff, sum(1 for t, fdr in weightedFDR.items() if fdr < args.fdr_cutoff), len(weightedFDR)))
+print('Triples with unweighted FDR < {}: {}/{}'.format(args.fdr_cutoff, sum(1 for t, fdr in unweightedFDR.items() if fdr < args.fdr_cutoff), len(unweightedFDR)))
 
 # Rank triples by P-value
 triples = sorted(set(weightedPval.keys()) & set(unweightedPval.keys()))

@@ -17,7 +17,7 @@ from .statistics import multiple_hypothesis_correction
 # Compute the mutual exclusivity T for the given gene set
 def T(M, geneToCases):
     sampleToCount = Counter( s for g in M for s in geneToCases.get(g, []) )
-    return sum( 1 for sample, count in list(sampleToCount.items()) if count == 1 )
+    return sum( 1 for sample, count in sampleToCount.items() if count == 1 )
 
 # Compute the permutational
 def permutational_dist_wrapper( args ): return permutational_dist( *args )
@@ -29,7 +29,7 @@ def permutational_dist( sets, permuted_files ):
         permutedGeneToCases = defaultdict(set)
         for pf in pf_group:
             with open(pf, 'r') as IN:
-                for g, cases in list(json.load(IN)['geneToCases'].items()):
+                for g, cases in json.load(IN)['geneToCases'].items():
                     permutedGeneToCases[g] |= set(cases)
 
         reading_time = time() - reading_start
@@ -55,7 +55,7 @@ def rce_permutation_test(sets, geneToCases, num_patients, permuted_files, num_co
     # Filter the sets based on the observed values
     k = len(next(iter(sets)))
     setToObs = dict( (M, observed_values(M, num_patients, geneToCases)) for M in sets )
-    sets = set( M for M, (X, T, Z, tbl) in list(setToObs.items()) if testable_set(k, T, Z, tbl) )
+    sets = set( M for M, (X, T, Z, tbl) in setToObs.items() if testable_set(k, T, Z, tbl) )
 
     # Compute the distribution of exclusivity for each pair across the permuted files
     np    = float(len(permuted_files))
@@ -70,19 +70,19 @@ def rce_permutation_test(sets, geneToCases, num_patients, permuted_files, num_co
     setToDist, setToTime = defaultdict(list), dict()
     for dist, times in empirical_distributions:
         setToTime.update(list(times.items()))
-        for k, v in list(dist.tems()):
+        for k, v in dist.tems():
             setToDist[k].extend(v)
 
     # Compute the observed values and then the P-values
     setToObs = dict( (M, setToObs[M]) for M in sets )
     setToPval = dict()
-    for M, (X, T, Z, tbl) in list(setToObs.items()):
+    for M, (X, T, Z, tbl) in setToObs.items():
         # Compute the P-value.
         count = sum( 1. for d in setToDist[M] if d >= T )
         setToPval[M] = count / np
 
     # Compute FDRs
-    tested_sets = list(setToPval.keys())
+    tested_sets = setToPval.keys()
     pvals = [ setToPval[M] for M in tested_sets ]
     setToFDR = dict(list(zip(tested_sets, multiple_hypothesis_correction(pvals, method="BY"))))
 
@@ -181,7 +181,7 @@ def test_sets( sets, geneToCases, num_patients, method, test, P=None, num_cores=
 
     # Make sure all P-values are numbers
     tested_sets = len(setToPval)
-    invalid_sets = set( M for M, pval in list(setToPval.items()) if isnan(pval) or -PTOL > pval or pval > 1+PTOL )
+    invalid_sets = set( M for M, pval in setToPval.items() if isnan(pval) or -PTOL > pval or pval > 1+PTOL )
 
     # Report invalid sets
     if verbose > 0 and report_invalids:
@@ -192,9 +192,9 @@ def test_sets( sets, geneToCases, num_patients, method, test, P=None, num_cores=
             invalid_rows.append([ ','.join(sorted(M)), T, Z, tbl, setToPval[M] ])
         sys.stderr.write( '\t' + '\n\t '.join([ '\t'.join(map(str, row)) for row in invalid_rows ]) + '\n' )
 
-    setToPval = dict( (M, pval) for M, pval in list(setToPval.items()) if not M in invalid_sets )
-    setToTime = dict( (M, runtime) for M, runtime in list(setToTime.items()) if not M in invalid_sets )
-    setToObs = dict( (M, obs) for M, obs in list(setToObs.items()) if not M in invalid_sets )
+    setToPval = dict( (M, pval) for M, pval in setToPval.items() if not M in invalid_sets )
+    setToTime = dict( (M, runtime) for M, runtime in setToTime.items() if not M in invalid_sets )
+    setToObs = dict( (M, obs) for M, obs in setToObs.items() if not M in invalid_sets )
 
     if verbose > 0:
         print('- Output {} sets'.format(len(setToPval)))
@@ -260,7 +260,7 @@ def general_test_sets( sets, geneToCases, num_patients, method, test, statistic,
 
     # Make sure all P-values are numbers
     tested_sets = len(setToPval)
-    invalid_sets = set( M for M, pval in list(setToPval.items()) if isnan(pval) or -PTOL > pval or pval > 1+PTOL )
+    invalid_sets = set( M for M, pval in setToPval.items() if isnan(pval) or -PTOL > pval or pval > 1+PTOL )
 
     # Report invalid sets
     if verbose > 0 and report_invalids:
@@ -271,9 +271,9 @@ def general_test_sets( sets, geneToCases, num_patients, method, test, statistic,
             invalid_rows.append([ ','.join(sorted(M)), T, Z, tbl, setToPval[M] ])
         sys.stderr.write( '\t' + '\n\t '.join([ '\t'.join(map(str, row)) for row in invalid_rows ]) + '\n' )
 
-    setToPval = dict( (M, pval) for M, pval in list(setToPval.items()) if not M in invalid_sets )
-    setToTime = dict( (M, runtime) for M, runtime in list(setToTime.items()) if not M in invalid_sets )
-    setToObs = dict( (M, obs) for M, obs in list(setToObs.items()) if not M in invalid_sets )
+    setToPval = dict( (M, pval) for M, pval in setToPval.items() if not M in invalid_sets )
+    setToTime = dict( (M, runtime) for M, runtime in setToTime.items() if not M in invalid_sets )
+    setToObs = dict( (M, obs) for M, obs in setToObs.items() if not M in invalid_sets )
 
     if verbose > 0:
         print('- Output {} sets'.format(len(setToPval)))
@@ -292,4 +292,4 @@ def general_test_sets( sets, geneToCases, num_patients, method, test, statistic,
 ################################################################################
 # Testable set
 def testable_set( k, T, Z, tbl ):
-    return T > Z and all( tbl[2**i] > 0 for i in list(range(k)) )
+    return T > Z and all( tbl[2**i] > 0 for i in range(k) )
