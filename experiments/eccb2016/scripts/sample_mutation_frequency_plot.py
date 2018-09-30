@@ -26,12 +26,12 @@ for mutation_file, cancer in zip(args.mutation_files, args.cancers):
 
         # Make a map of patients to their mutated genes
         patientToMutations = dict( (p, set()) for p in patients )
-        for g, cases in list(obj['geneToCases'].items()):
+        for g, cases in obj['geneToCases'].items():
             for p in cases:
                 patientToMutations[p].add( g )
 
         # Assemble the data into dictionaries for Pandas
-        for p, mutations in list(patientToMutations.items()):
+        for p, mutations in patientToMutations.items():
             ty = "Hypermutator" if p in hypermutators else "Non-hypermutator"
             items.append({ "Sample": p, "Mutated genes per sample": len(mutations),
                            "Type": ty, "Cancer": cancer })

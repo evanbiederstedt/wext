@@ -28,7 +28,7 @@ obj['genes'] = sorted(obj['geneToCases'].keys())
 obj['num_genes'] = len(obj['genes'])
 obj['params']['lengths_file'] = os.path.abspath(args.lengths_file)
 obj['genes_with_no_length_removed'] = sorted(original_genes - set(obj['genes']))
-obj['patientToMutations'] = dict((p, sorted(set(muts) & remaining_genes)) for p, muts in iter(list(obj['patientToMutations'].items())))
+obj['patientToMutations'] = dict((p, sorted(set(muts) & remaining_genes)) for p, muts in obj['patientToMutations'].items())
 print('Removed {} genes with no length'.format(len(obj['genes_with_no_length_removed'])))
 
 # Output the new file

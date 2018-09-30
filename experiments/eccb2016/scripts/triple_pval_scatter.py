@@ -36,7 +36,7 @@ for permuted_file in args.permutational_files:
     with open(permuted_file, 'r') as IN:
         setToPermuted.update( json.load(IN)['setToPval'] )
 
-for M, pval in list(setToPermuted.items()):
+for M, pval in setToPermuted.items():
     if pval == 0:
         setToPermuted[M] = 1./args.num_permutations
 
